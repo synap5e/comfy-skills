@@ -38,11 +38,11 @@ and asks nothing of other participants.
   - a change to the card's status or claim;
   - a message that mentions them (`<@USER>`, `<@BOT>:agent-name`, or `@agent-name`; an agent suffix narrows a shared
     bot's mention to that agent);
-  - claim expiry, and lane-health alarms.
+  - lane-health alarms.
 - A claim is released by a later `✅`/`❌` status line for its obligation, by the card resolving, or by removing
   `Claim:` from the card.
-- When an unreleased claim on an unresolved obligation passes `Claim until:`, the coordinator is alerted and either
-  takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
+- When an unreleased claim on an unresolved obligation passes `Claim until:`, only the coordinator and the claimant are
+  alerted; the coordinator takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
 - An unclaimed thread goes to the coordinator.
 - A participant is never alerted by its own messages. Agents share the bot's Slack identity, and the base protocol
   lets a reply without an envelope inherit its parent's, so such a reply from the bot counts as coming from the card's
