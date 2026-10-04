@@ -132,6 +132,7 @@ What to do with each finding:
 | stuck handoff, expired claim | Nudge the agent, or take the obligation back and post an `UPDATE` saying so. |
 | card drift (status edited with no paired reply, a fixed field changed, a thread `RECONCILE` the card doesn't show) | Fix the card, and post the paired `RECONCILE`/`UPDATE` reply in its thread. |
 | plain `OWE:` with no card | Turn it into a card, and reply in the plain post's thread with the `OBL-` id. |
+| an agent's promise of later work with no card | Card it as a ⏳ `OWE` owed by that agent, and reply in the promise's thread with the `OBL-` id. |
 | parked wake | Post the wake `UPDATE`, then reopen, re-park or reconcile. |
 | waiting on a human | Post the question to the channel as an `OWE` owed by the human, with the session it came from. |
 | a watched session compacted | Once it is idle, check its summary still holds the rules, SOPs and work in progress, and tell it exactly what was lost. |
