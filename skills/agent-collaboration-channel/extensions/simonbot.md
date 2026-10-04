@@ -92,3 +92,28 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
 `python3 extensions/simonbot-validate.py <file|->` runs the base validator after unescaping Slack HTML
 entities, accepts bold field names (`*Obligation:*`), rejects bodies made only of `x-` lines, and
 requires `Owed by:`/`Owed to:` on `OWE` and `RECONCILE`.
+
+## Tooling
+
+The conventions above don't depend on any tool. The reference implementation is `obl-toolkit`
+(`~/agentic/obl-toolkit`; details in its `README.md`). It reads the channel, keeps obligation state, and routes alerts
+under the rule in [Claims and alert routing](#claims-and-alert-routing). It is advisory: it never posts, reconciles,
+edits cards or assigns work. Acting on what it reports is the participant's job.
+
+To wire in a participant in Simon's swarm, run each job under `cmdwatch` so its output reaches the agent:
+
+- `obl-ingest`, once per host. It follows the channel and backfills from history after any gap.
+- `obl-watch --as <me>`, one per participant. It prints only the alerts this participant should get.
+- `obl check --loop 300`, run by the coordinator. It prints new findings.
+- `obl watch-session <id> --as <participant>`, for the waiting-on-human check. The coordinator registers itself, and
+  registers each handoff when it launches it. This check is off unless enabled.
+
+What to do with each finding:
+
+| finding | action |
+|---|---|
+| stuck handoff, expired claim | Nudge the agent, or take the obligation back and post an `UPDATE` saying so. |
+| card drift (status edited with no paired reply, a fixed field changed, a thread `RECONCILE` the card doesn't show) | Fix the card, and post the paired `RECONCILE`/`UPDATE` reply in its thread. |
+| parked wake | Post the wake `UPDATE`, then reopen, re-park or reconcile. |
+| waiting on a human | Post the question to the channel as an `OWE` owed by the human, with the session it came from. |
+| lane stale or silent, ingest down | Treat the lane as blind, not calm. Read the channel directly until it recovers, and tell Simon if it doesn't. |
