@@ -48,7 +48,8 @@ and asks nothing of other participants.
   lets a reply without an envelope inherit its parent's, so such a reply from the bot counts as coming from the card's
   `from`. An agent replying in a thread whose card someone else posted repeats the envelope (the compact one-line form
   is enough). Otherwise its reply reads as the card sender's. A status line's `agent:` names who the line is about,
-  not who posted it.
+  not who posted it. A plain top-level post from the bot, with no envelope, is the coordinator's own,
+  since a bare mention of the bot already goes to the coordinator.
 
 Lane health: a silent lane counts as blind, not calm. If no channel event arrives for a configured interval while
 obligations are open, or if the watcher reports the lane stale or disconnected, every participant is alerted.
