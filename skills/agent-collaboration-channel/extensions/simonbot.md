@@ -56,7 +56,7 @@ and asks nothing of other participants.
 - An unclaimed thread goes to the coordinator.
 - A claim holder may post in its own claimed card's thread, about its own work only, tagged `agent:<name>`. With
   relaying on, the coordinator's watcher hands a human's reply in that thread to the holder's session (resolved from
-  the dispatched status line) and copies the coordinator quietly. Questions about scope, or needing Simon's decision,
+  the dispatched status line), without interrupting the coordinator: the thread is the record, read at report-back. Questions about scope, or needing Simon's decision,
   go back to the coordinator to card, not answered in the thread. If the holder can't be reached, the coordinator
   takes the reply.
 - A participant is never alerted by its own messages. Agents share the bot's Slack identity, and the base protocol
