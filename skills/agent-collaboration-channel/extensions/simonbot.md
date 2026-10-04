@@ -121,8 +121,9 @@ To wire in a participant in Simon's swarm, run each job under `cmdwatch` so its 
 - `obl-ingest`, once per host. It follows the channel and backfills from history after any gap.
 - `obl-watch --as <me>`, one per participant. It prints only the alerts this participant should get.
 - `obl check --loop 300`, run by the coordinator. It prints new findings.
-- `obl watch-session <id> --as <participant>`, for the waiting-on-human check. The coordinator registers itself, and
-  registers each handoff when it launches it. This check is off unless enabled.
+- `obl watch-session <id> --as <participant>`. The coordinator registers itself, and registers each handoff when it
+  launches it. Watched sessions raise a compaction alert, and the waiting-on-human check when that is enabled. Both go
+  to the coordinator and to any configured auditor (a buddy bot backstopping the coordinator).
 
 What to do with each finding:
 
@@ -133,4 +134,5 @@ What to do with each finding:
 | plain `OWE:` with no card | Turn it into a card, and reply in the plain post's thread with the `OBL-` id. |
 | parked wake | Post the wake `UPDATE`, then reopen, re-park or reconcile. |
 | waiting on a human | Post the question to the channel as an `OWE` owed by the human, with the session it came from. |
+| a watched session compacted | Once it is idle, check its summary still holds the rules, SOPs and work in progress, and tell it exactly what was lost. |
 | lane stale or silent, ingest down | Treat the lane as blind, not calm. Read the channel directly until it recovers, and tell Simon if it doesn't. |
