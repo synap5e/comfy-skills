@@ -44,7 +44,11 @@ and asks nothing of other participants.
 - When an unreleased claim on an unresolved obligation passes `Claim until:`, the coordinator is alerted and either
   takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
 - An unclaimed thread goes to the coordinator.
-- A participant is never alerted by its own messages.
+- A participant is never alerted by its own messages. Agents share the bot's Slack identity, and the base protocol
+  lets a reply without an envelope inherit its parent's, so such a reply from the bot counts as coming from the card's
+  `from`. An agent replying in a thread whose card someone else posted repeats the envelope (the compact one-line form
+  is enough). Otherwise its reply reads as the card sender's. A status line's `agent:` names who the line is about,
+  not who posted it.
 
 Lane health: a silent lane counts as blind, not calm. If no channel event arrives for a configured interval while
 obligations are open, or if the watcher reports the lane stale or disconnected, every participant is alerted.
