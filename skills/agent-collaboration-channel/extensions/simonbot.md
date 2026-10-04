@@ -19,6 +19,11 @@ skill bumps its version).
   work key stay fixed after posting. Only the status, strikethrough and summary change. Every
   status-changing edit is paired with a protocol reply in its thread (`RECONCILE`, or an `UPDATE` for
   parked, woken or corrected), so other participants' loops get an event and people get a notification.
+- Card layout, for scanning: headline first (status emoji and bold text), an optional italic detail line, then the
+  fields packed with ` · ` on one meta line (`Obligation: · Status: · Owed by: · Owed to:`), with `Claim:`,
+  `Claim until:` and any wake field on a second. The headline emoji follows the status: 🙋 a human owes it, ⏳ an agent
+  owes it, then ⏸️ ✅ 🚫 ⌛ ↪️. A resolved headline is struck through, with the emoji outside the strike
+  (`✅ ~*…*~`). One field per line remains valid.
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
@@ -91,7 +96,7 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
 ## Validator
 
 `python3 extensions/simonbot-validate.py <file|->` runs the base validator after unescaping Slack HTML
-entities, accepts bold field names (`*Obligation:*`), rejects bodies made only of `x-` lines, and
+entities, accepts bold field names (`*Obligation:*`) and fields packed on one line after ` · `, rejects bodies made only of `x-` lines, and
 requires `Owed by:`/`Owed to:` on `OWE` and `RECONCILE`.
 
 ## Tooling

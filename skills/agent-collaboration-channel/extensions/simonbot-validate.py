@@ -19,7 +19,8 @@ _BOLD = re.compile(r"(?m)^[*_]+([A-Za-z][A-Za-z ]*:)[*_]+")
 
 
 def _field(name: str, text: str) -> bool:
-    return bool(re.search(rf"(?im)^{name}:\s*\S+", text))
+    # A field starts a line, or follows " · " on a packed meta line (`Obligation: OBL-3 · Status: open · Owed by: a`).
+    return bool(re.search(rf"(?im)(?:^|\s·\s)[*_]*{name}[*_]*:\s*\S+", text))
 
 
 def validate(text: str, **kwargs) -> list[str]:
