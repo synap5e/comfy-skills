@@ -103,6 +103,78 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
   States: `📝 requested`, `📤 dispatched`, `▶️ started`, `✅ verified`, `⏸️ parked`, `❓ question`,
   `🚧 blocked`, `⚠️ finding`, `🔁 bounce`, `↩️ corrected`, `❌ failed`.
 
+## Rules
+
+Each rule is one `### <rule-name>`, and its first sentence is the reminder. obl-toolkit appends that sentence to the
+alerts and findings the rule governs (`‖ rule:<name>: <reminder>`), so it must work alone as an instruction. Keep one
+sentence, and edit the rule here rather than in the tool. Informational alerts (lane, silence, ingest down, a stalled
+agent, card status or claim changes) carry no rule.
+
+### ask-is-owe
+A question to a person is a top-level OWE owed by them with a real @-mention; reply in the thread with the OBL id.
+A question left in a thread or a terminal is invisible to the person and to every loop that tracks obligations; only
+a card owed by them, with a mention that notifies, makes it theirs to answer.
+
+### owe-outlives-turn
+Any commitment that outlives this turn gets an OWE card.
+Memory and Slack search are not reminders: a commitment that survives a turn, a compaction or a restart must be in the
+ledger, or it will be rediscovered late or never.
+
+### promise-closes-in-thread
+Keep it, then reply `done: <link>` in the promise's thread, or card it.
+"Checking now" or "I'll post the result" is a promise: either it closes visibly where it was made, or it becomes an
+obligation the agent owes.
+
+### chase-children
+Bump the child; silence past its `next:` is a reason to check, not to wait.
+A dispatched child that misses its checkpoint is most often stuck, waiting on a question or dead; waiting longer only
+moves the miss later.
+
+### claim-lease
+Renew with an UPDATE carrying a new claim_until, or take the work back.
+A claim is a lease, not ownership: once it lapses with the work unresolved, either the holder renews it in the open or
+the coordinator takes the obligation back.
+
+### wake-update
+Post the paired wake UPDATE and reopen the card before acting.
+A parked item's wake condition is met; waking it in the thread and on the card first lets everyone see it is live
+again before work resumes.
+
+### card-pairing
+Every card status edit has a matching reply in its thread; state lives in the Status field.
+Slack sends no event for an edit, so the paired reply is what other loops and people see; the Status field, not the
+emoji or the wording, is what tools read.
+
+### read-whole-thread
+Read the card's whole thread before acting on the holder's report.
+Replies can land in a claimed thread while the coordinator is not interrupted (relayed to the holder), so the
+report-back is the moment to read what was said there.
+
+### verify-yourself
+Re-run the checks yourself before posting verified.
+A child's "done" is a claim; ✅ verified needs evidence the coordinator saw or reproduced (extension: Handoffs and status
+lines).
+
+### holder-scope
+Answer about your own work here; send scope or decision questions to the coordinator.
+A claim holder speaks in its own thread about its own work only; scope changes and Simon's decisions are cards the
+coordinator owns.
+
+### relay-fallback
+The holder didn't get this reply; answer it or forward it.
+The claim holder could not be reached (no live session, another host, a subagent), so the coordinator is the only one
+who will see it.
+
+### reply-when-addressed
+Reply when addressed; take on new work only from Kishore, Jo or Simon; don't speak as Simon.
+Being addressed asks for an answer, not necessarily new work; only the trial's humans assign work, and the bot never
+presents its own view as Simon's.
+
+### reread-after-compaction
+Re-read the extension's Rules section and your memory before the next action.
+A compaction summary drops rules and work in progress silently; re-reading the rules and memory restores them before
+they are needed.
+
 ## Validator
 
 `python3 extensions/simonbot-validate.py <file|->` runs the base validator after unescaping Slack HTML
