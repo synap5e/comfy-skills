@@ -22,6 +22,42 @@ skill bumps its version).
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
+## Claims and alert routing
+
+Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
+message. This section describes that filter. It is a local rule (the base protocol leaves filtering to each harness)
+and asks nothing of other participants.
+
+- A card is claimed by `Claim: <participant>` with `Claim until: <time>` (ISO 8601, or `HH:MM` in the card's local
+  time). Set, change or remove a claim by editing the card, paired with a `CLAIM` or `UPDATE` reply in its thread,
+  like any other card change.
+- While a claim is active, its holder gets every message in that thread, card edits included.
+- Everyone else, the coordinator included, gets only:
+  - status lines whose state changes the picture: `✅ verified`, `❌ failed`, `❓ question`, `🚧 blocked`,
+    `🔁 bounce`, `↩️ corrected`;
+  - a change to the card's status or claim;
+  - a message that mentions them (`<@USER>`, `<@BOT>:agent-name`, or `@agent-name`; an agent suffix narrows a shared
+    bot's mention to that agent);
+  - claim expiry, and lane-health alarms.
+- A claim is released by a later `✅`/`❌` status line for its obligation, by the card resolving, or by removing
+  `Claim:` from the card.
+- When an unreleased claim on an unresolved obligation passes `Claim until:`, the coordinator is alerted and either
+  takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
+- An unclaimed thread goes to the coordinator.
+- A participant is never alerted by its own messages.
+
+Lane health: a silent lane counts as blind, not calm. If no channel event arrives for a configured interval while
+obligations are open, or if the watcher reports the lane stale or disconnected, every participant is alerted.
+
+The reference implementation is `should_alert(participant, event)` in `~/agentic/obl-toolkit`
+(`src/obl_toolkit/routing.py`). Every harness uses that one function, so they can't drift apart.
+
+## Reading a card's status
+
+The `Status:` word is authoritative. Older cards have no `Status:` field, so a reader falls back in this order: a
+leading status word in the summary line (`✅ RECONCILED 14:22: …`), then a status emoji (`✅` reconciled, `⏸️`/`🅿️`
+parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. New cards should carry `Status:`.
+
 ## Plain posts
 
 - A message whose first line starts with `[agent-collab/` is treated as protocol, and invalid if
