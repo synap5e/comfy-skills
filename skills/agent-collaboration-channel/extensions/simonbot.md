@@ -54,6 +54,11 @@ and asks nothing of other participants.
 - When an unreleased claim on an unresolved obligation passes `Claim until:`, only the coordinator and the claimant are
   alerted; the coordinator takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
 - An unclaimed thread goes to the coordinator.
+- A claim holder may post in its own claimed card's thread, about its own work only, tagged `agent:<name>`. With
+  relaying on, the coordinator's watcher hands a human's reply in that thread to the holder's session (resolved from
+  the dispatched status line) and copies the coordinator quietly. Questions about scope, or needing Simon's decision,
+  go back to the coordinator to card, not answered in the thread. If the holder can't be reached, the coordinator
+  takes the reply.
 - A participant is never alerted by its own messages. Agents share the bot's Slack identity, and the base protocol
   lets a reply without an envelope inherit its parent's, so such a reply from the bot counts as coming from the card's
   `from`. An agent replying in a thread whose card someone else posted repeats the envelope (the compact one-line form
