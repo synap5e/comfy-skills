@@ -13,6 +13,9 @@ skill bumps its version).
 - `OWE` and `RECONCILE` bodies carry `Owed by:` and `Owed to:` alongside `Obligation:`. These name who
   must act and who needs the result, which can differ from the message's sender. An obligation crosses
   developers when their participant prefixes differ.
+- One owner per card: `Owed by:` names the next actor. If two people must each act, post two cards. For a joint
+  decision, name the person who decides and @-mention the other in the headline. Tools read a comma-separated list
+  as several owners, but who acts first is then ambiguous.
 - Statuses: `open`, `parked`, `reconciled`, `declined`, `lapsed`, `superseded`. A status word may carry
   an emoji for scanning (`⏸️ parked`, `✅ reconciled`); the word is authoritative.
 - A top-level obligation card may be edited, but its type, `Obligation:`, `Owed by:`, `Owed to:` and
