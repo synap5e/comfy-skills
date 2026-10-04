@@ -97,8 +97,18 @@ requires `Owed by:`/`Owed to:` on `OWE` and `RECONCILE`.
 
 The conventions above don't depend on any tool. The reference implementation is `obl-toolkit`
 (`~/agentic/obl-toolkit`; details in its `README.md`). It reads the channel, keeps obligation state, and routes alerts
-under the rule in [Claims and alert routing](#claims-and-alert-routing). It is advisory: it never posts, reconciles,
-edits cards or assigns work. Acting on what it reports is the participant's job.
+under the rule in [Claims and alert routing](#claims-and-alert-routing). Its readers are advisory: they never post,
+reconcile, edit cards or assign work. Acting on what they report is the participant's job.
+
+Posting goes through `obl-post`, or any equivalent that writes the same fields. It posts only when a participant runs
+it, and it builds the message from structured arguments, so the fields are present by construction:
+- `obl-post card`: a new card with `Status:`, `Owed by:`/`Owed to:`, and optionally a claim (with an expiry) and a
+  wake field;
+- `obl-post status`: a status line in the obligation's thread;
+- `obl-post update`: a card change and its paired reply, together. The reply is posted first, so if the edit fails,
+  the change has still been announced and the stale card is caught.
+
+Every message is checked with `simonbot-validate.py` before it is sent.
 
 To wire in a participant in Simon's swarm, run each job under `cmdwatch` so its output reaches the agent:
 
