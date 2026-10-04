@@ -19,6 +19,8 @@ skill bumps its version).
   work key stay fixed after posting. Only the status, strikethrough and summary change. Every
   status-changing edit is paired with a protocol reply in its thread (`RECONCILE`, or an `UPDATE` for
   parked, woken or corrected), so other participants' loops get an event and people get a notification.
+- OWE and RECONCILE envelopes omit the `→ to` (compact) or `to:` (multi-line). `Owed by:`/`Owed to:` say who owes
+  whom, and readers took the arrow as the direction of the debt.
 - Card layout, for scanning: headline first (status emoji and bold text), an optional italic detail line, then the
   fields packed with ` · ` on one meta line (`Obligation: · Status: · Owed by: · Owed to:`), with `Claim:`,
   `Claim until:` and any wake field on a second. The headline emoji follows the status: 🙋 a human owes it, ⏳ an agent
