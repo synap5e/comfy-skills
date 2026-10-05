@@ -23,9 +23,35 @@ def _field(name: str, text: str) -> bool:
     return bool(re.search(rf"(?im)(?:^|\s·\s)[*_]*{name}[*_]*:\s*\S+", text))
 
 
+TOP_LEVEL_LIMIT = 400
+_LINK = re.compile(r"<[^>|]+\|([^>]+)>|<([^>]+)>")
+_STATE_KEYS = "Obligation|Status|Owed by|Owed to|Waiting on|Priority|Claim|Claim until|Next check|Decision owner"
+_FIELD_LINE = re.compile(rf"^\s*[*_]*(?:{_STATE_KEYS})[*_]*:\s*\S", re.I)
+_ENVELOPE = re.compile(r"^\s*\[agent-collab/[^\]]+\]")
+_ENVELOPE_FIELD = re.compile(r"^\s*(from|to|work)\s*:", re.I)
+
+
+def prose_length(text: str) -> int:
+    """Characters people read on a top-level card: no envelope line(s), no `Key: value` field lines (packed or not),
+    Slack links counted as their label. WHY: the 400-char limit is about reading; field lines are state (obl-post
+    applies the same rule, so hand-posted and tool-posted cards are measured alike)."""
+    kept = []
+    for line in text.splitlines():
+        if _ENVELOPE.match(line) or _ENVELOPE_FIELD.match(line) or line.strip().lower().startswith("x-"):
+            continue
+        if _FIELD_LINE.match(line):
+            continue
+        kept.append(_LINK.sub(lambda m: m.group(1) or m.group(2), line))
+    return len("\n".join(kept).strip().replace("~", ""))
+
+
 def validate(text: str, **kwargs) -> list[str]:
     text = _BOLD.sub(r"\1", html.unescape(text))
-    errors = base.validate(text, **kwargs)
+    threaded = kwargs.pop("threaded", False)
+    # WHY threaded=True for the base: the base counts every character toward 400; this extension counts prose only.
+    errors = base.validate(text, threaded=True, **kwargs)
+    if not threaded and prose_length(text) > TOP_LEVEL_LIMIT:
+        errors.append(f"top-level prose is {prose_length(text)} chars (limit {TOP_LEVEL_LIMIT}, field lines excluded); move detail to a thread")
     first = next((ln.strip() for ln in text.splitlines() if ln.strip()), "")
     match = re.match(r"^\[agent-collab/v0\]\s+([A-Z]+)", first)
     body_lines = [ln for ln in text.splitlines()[1:] if ln.strip()]
