@@ -100,6 +100,10 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
   Brief sent; expecting its plan by 15:30.
   ```
 
+  A holder that stays off Slack (private work) gets `slack:no` on its dispatched line, e.g.
+  `[📤 dispatched · obl:OBL-030 · agent:issues-verification · host:flow · harness:claude/tmux · slack:no]`.
+  Human replies in that thread then go to the coordinator, not to the holder, which can't answer there.
+
   States: `📝 requested`, `📤 dispatched`, `▶️ started`, `✅ verified`, `⏸️ parked`, `❓ question`,
   `🚧 blocked`, `⚠️ finding`, `🔁 bounce`, `↩️ corrected`, `❌ failed`.
 
@@ -148,7 +152,9 @@ emoji or the wording, is what tools read.
 ### read-whole-thread
 Read the card's whole thread before acting on the holder's report.
 Replies can land in a claimed thread while the coordinator is not interrupted (relayed to the holder), so the
-report-back is the moment to read what was said there.
+report-back is the moment to read what was said there. obl-post refuses `status verified` and
+`update --status reconciled` while the card's latest claim has human replies since dispatch, until rerun with
+`--read-thread`.
 
 ### verify-yourself
 Re-run the checks yourself before posting verified.
@@ -162,7 +168,7 @@ coordinator owns.
 
 ### relay-fallback
 The holder didn't get this reply; answer it or forward it.
-The claim holder could not be reached (no live session, another host, a subagent), so the coordinator is the only one
+The claim holder could not be reached (no live session, another host, a subagent, or it stays off Slack: `slack:no`), so the coordinator is the only one
 who will see it.
 
 ### reply-when-addressed
