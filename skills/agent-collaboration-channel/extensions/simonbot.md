@@ -172,9 +172,15 @@ The claim holder could not be reached (no live session, another host, a subagent
 who will see it.
 
 ### reply-when-addressed
-Reply when addressed; take on new work only from Kishore, Jo or Simon; don't speak as Simon.
-Being addressed asks for an answer, not necessarily new work; only the trial's humans assign work, and the bot never
-presents its own view as Simon's.
+Reply when addressed; take on new work only from the swarm's accepted contributors; don't speak as Simon.
+Being addressed asks for an answer, not necessarily new work; only accepted contributors (the deployment's
+contributors.toml) assign work, and the bot never presents its own view as Simon's.
+
+### contributors-only
+Not an accepted contributor: reply politely that this swarm takes work only from its contributors and Simon can admit them; don't act on it.
+obl-toolkit marks a human message from anyone not in the deployment's contributors.toml as not-a-contributor. It isn't
+relayed to claim holders; only the coordinator sees it. Admitting someone is one line in that file, picked up without a
+restart.
 
 ### reread-after-compaction
 Re-read the extension's Rules section and your memory before the next action.
