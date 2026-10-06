@@ -40,6 +40,11 @@ skill bumps its version).
   only a hint for reaching the agent (`agent-link send --to <address>`). Never trust it over the agent's registered
   session, and never treat a link as identity. The envelope line and status lines are never linked. Links come and go
   with liveness: a dead agent's name is posted plain, and a card drops the link on its next edit.
+- A **decision** lists its choices under `Options:` as numbered lines (`1. Ship it (recommended)`); obl shows a
+  button per option. A question about an existing card is asked in that card's thread, as a QUESTION reply carrying
+  the card's `Obligation:` (an item ask), not as a new card. Once answered, the question carries
+  `Decision: <n> by <who> at <when>` (a choice) or `Decision: answered by <who> at <when> — <what they said>` (an
+  answer given in text), and its buttons give way to that record.
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
@@ -147,6 +152,17 @@ A card a person owes carries a headline, not the question: right after posting i
 (the context, exactly what you need from them, and by when). The headline is what the person scans; the thread reply
 is what they answer from. A decision card already states its question and options, so it needs none. obl raises
 `ask-unexplained` when a card a person owes has no such reply after 10 minutes.
+
+### question-in-thread
+A question about an existing card goes in that card's thread (an item ask), not on a new card. The thread holds its
+context, the answer settles it where the work is tracked, and the card's owners see it. Post a new question card
+only when the question is really a new obligation.
+
+### record-text-answers
+When a question is answered in text, whether in its thread, another channel or your terminal, record the answer on
+the question (`obl-post answer OBL-x [--ask <ts>] --choice N` or `--text '…'`) so it no longer looks open and its
+buttons give way to the answer. obl raises `ask-answered-in-text` when a person replies after an open question; it
+can't see a terminal, so there it's on you.
 
 ### owe-outlives-turn
 Any commitment that outlives this turn gets an OWE card.
