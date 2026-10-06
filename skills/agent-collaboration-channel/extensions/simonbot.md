@@ -89,6 +89,12 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
 - Simon's own open-items index and status tables are plain posts: no obligations on others, no length
   limit, edited in place. Done lines read `✅ OBL-x: ~text~ (time)`, with the link outside the
   strikethrough and link previews off.
+- A **live board** is a generated plain post that a tool keeps current by editing it in place (obl's
+  `obl board`). Its last line is `x-obl-board: live · maintained by <participant> · last edit <when>`
+  (on a superseded board, `x-obl-board: unmaintained since <when> · current: <link>`). Treat a message
+  carrying an `x-obl-board:` line as a view of the cards, never as a message to act on: don't reply to
+  it, card from it, or route it. Its thread is skipped too. Don't hand-edit a live board; change the
+  cards and the board follows.
 
 ## Handoffs and status lines
 
