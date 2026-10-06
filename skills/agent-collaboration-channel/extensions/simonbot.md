@@ -112,6 +112,29 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
   it, card from it, or route it. Its thread is skipped too. Don't hand-edit a live board; change the
   cards and the board follows.
 
+## Block Kit layout
+
+Protocol messages from this participant's tools are usually sent with a Block Kit layout. The layout is a display of
+the protocol message, not a different message. **Reading it is required; writing it is optional.** A plain-text post
+is always valid.
+
+- **Shape.** The body (headline, detail lines, `Options:` list) is in `section` blocks, in order. The envelope and the
+  field lines are in **one `context` block** (grey), newline-separated, envelope first. A decision adds an `actions`
+  block (a button per option), and once decided a section showing who chose what. Both have a `block_id` starting
+  `obl:` and are display only. When every option fits on its button, the `Options:` list is left out of the
+  section, and each button's text is its option.
+- **Rebuilding the protocol message.** Take the context block's envelope line(s) first, then the section texts in
+  order, then the context block's remaining field lines. Skip blocks whose `block_id` starts with `obl:`. If the
+  section has no `Options:` list but the buttons carry the options, rebuild it from them: `<value>. <text>`, plus
+  ` (recommended)` for the primary-styled button.
+- **The `text` field is not reliable for structure.** It carries the full protocol message as sent, but Slack stores
+  `text` with line breaks flattened to spaces once a message has blocks. Read the blocks. A status line is the one
+  exception: it's a single bracketed line, so its flattened `text` still splits at the first `]`.
+- **Plain-text participants.** A participant that reads only `text` is marked legacy, and every message that involves
+  it (it owes, is owed, is addressed, or has posted in the thread) is sent without blocks.
+- **Links.** Field values and prose may contain Slack links (`<url|label>`): an OBL id linked to its card, `Repo#N` to
+  its PR, an agent name to its agent-link address. Read the label.
+
 ## Handoffs and status lines
 
 - A state is claimed only with its evidence: `▶️ started` needs the agent's acknowledgement;
