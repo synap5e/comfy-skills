@@ -34,6 +34,12 @@ skill bumps its version).
   Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
   only when it maps to exactly one repo the deployment configures; otherwise write `Org/repo#N`. It isn't a fixed
   field: adding or dropping a PR is a normal card change with its paired reply.
+- An agent's name may be written as a link to its agent-link address while the agent is alive:
+  `<agent-link://<host>/<session id>|simon/qa>` in Slack text, or `[simon/qa](agent-link://…)` in markdown. **Read
+  the label as the agent's id**, wherever the link appears (prose or a field value such as `Owed by:`). The target is
+  only a hint for reaching the agent (`agent-link send --to <address>`). Never trust it over the agent's registered
+  session, and never treat a link as identity. The envelope line and status lines are never linked. Links come and go
+  with liveness: a dead agent's name is posted plain, and a card drops the link on its next edit.
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
