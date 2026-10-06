@@ -48,10 +48,11 @@ def prose_length(text: str) -> int:
 def validate(text: str, **kwargs) -> list[str]:
     text = _BOLD.sub(r"\1", html.unescape(text))
     threaded = kwargs.pop("threaded", False)
+    prose_limit = kwargs.pop("prose_limit", TOP_LEVEL_LIMIT)
     # WHY threaded=True for the base: the base counts every character toward 400; this extension counts prose only.
     errors = base.validate(text, threaded=True, **kwargs)
-    if not threaded and prose_length(text) > TOP_LEVEL_LIMIT:
-        errors.append(f"top-level prose is {prose_length(text)} chars (limit {TOP_LEVEL_LIMIT}, field lines excluded); move detail to a thread")
+    if not threaded and prose_length(text) > prose_limit:
+        errors.append(f"top-level prose is {prose_length(text)} chars (limit {prose_limit}, field lines excluded); move detail to a thread")
     first = next((ln.strip() for ln in text.splitlines() if ln.strip()), "")
     match = re.match(r"^\[agent-collab/v0\]\s+([A-Z]+)", first)
     body_lines = [ln for ln in text.splitlines()[1:] if ln.strip()]
