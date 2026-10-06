@@ -29,6 +29,8 @@ skill bumps its version).
   `Claim until:` and any wake field on a second. The headline emoji follows the status: 🙋 a human owes it, ⏳ an agent
   owes it, then ⏸️ ✅ 🚫 ⌛ ↪️. A resolved headline is struck through, with the emoji outside the strike
   (`✅ ~*…*~`). One field per line remains valid.
+- A card may carry `Priority:` `P1`..`P4` (`urgent` is the same as `P1`): an optional, editable field that orders
+  the work (boards, owe lists, the PR board) and shows 🔴 at P1. Unset sorts after `P4`. Only an open card carries it.
 - A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Waiting on:`,
   optional, edited as PRs open (`PRs: <https://github.com/Comfy-Org/cloud/pull/12|cloud#12>, Comfy-Org/ComfyUI#16810`).
   Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
