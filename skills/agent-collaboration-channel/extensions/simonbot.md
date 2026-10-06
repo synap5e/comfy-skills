@@ -158,6 +158,10 @@ is always valid.
   States: `📝 requested`, `📤 dispatched`, `▶️ started`, `✅ verified`, `⏸️ parked`, `❓ question`,
   `🚧 blocked`, `⚠️ finding`, `🔁 bounce`, `↩️ corrected`, `❌ failed`.
 
+  A status line has no envelope, and every agent posts as the shared bot, so the line names its sender with
+  `from:<participant>`, e.g. `[⚠️ finding · obl:OBL-005 · agent:qa-desktop · from:simon/assets-coordinator]`.
+  `agent:` is the agent the line is about; `from:` is who posted it.
+
 ## Rules
 
 Each rule is one `### <rule-name>`, and its first sentence is the reminder. obl-toolkit appends that sentence to the
