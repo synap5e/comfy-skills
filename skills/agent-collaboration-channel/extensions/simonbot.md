@@ -29,6 +29,11 @@ skill bumps its version).
   `Claim until:` and any wake field on a second. The headline emoji follows the status: 🙋 a human owes it, ⏳ an agent
   owes it, then ⏸️ ✅ 🚫 ⌛ ↪️. A resolved headline is struck through, with the emoji outside the strike
   (`✅ ~*…*~`). One field per line remains valid.
+- A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Waiting on:`,
+  optional, edited as PRs open (`PRs: <https://github.com/Comfy-Org/cloud/pull/12|cloud#12>, Comfy-Org/ComfyUI#16810`).
+  Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
+  only when it maps to exactly one repo the deployment configures; otherwise write `Org/repo#N`. It isn't a fixed
+  field: adding or dropping a PR is a normal card change with its paired reply.
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
