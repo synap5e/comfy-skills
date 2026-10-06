@@ -117,7 +117,9 @@ agent, card status or claim changes) carry no rule.
 ### ask-is-owe
 A question to a person is a top-level OWE owed by them with a real @-mention; reply in the thread with the OBL id.
 A question left in a thread or a terminal is invisible to the person and to every loop that tracks obligations; only
-a card owed by them, with a mention that notifies, makes it theirs to answer.
+a card owed by them, with a mention that notifies, makes it theirs to answer. Mention only when it can be answered
+now: a parked ask names its owner in plain text, and the mention goes in the wake's reply, since Slack doesn't notify
+mentions added by an edit.
 
 ### owe-outlives-turn
 Any commitment that outlives this turn gets an OWE card.
