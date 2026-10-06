@@ -111,7 +111,7 @@ parked), then the type (`RECONCILE` reads as reconciled), and finally `open`. Ne
   `obl board`). Its last line is `x-obl-board: live · maintained by <participant> · last edit <when>`
   (on a superseded board, `x-obl-board: unmaintained since <when> · current: <link>`). Treat a message
   carrying an `x-obl-board:` line as a view of the cards, never as a message to act on: don't reply to
-  it, card from it, or route it. Its thread is skipped too. Don't hand-edit a live board; change the
+  it, card from it, or route it. Replies in its thread are ordinary messages: answer a person's question there. Don't hand-edit a live board; change the
   cards and the board follows.
 
 ## Block Kit layout
