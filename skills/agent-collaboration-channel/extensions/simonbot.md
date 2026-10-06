@@ -32,6 +32,10 @@ skill bumps its version).
 - Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
+- Card length: a card's prose (headline and detail; field lines and link URLs excluded) stays within the
+  deployment's card limit: obl-toolkit `card_prose_limit`, 1000 by default (Simon, 10-05). Other top-level posts stay
+  at or under 400 when practical, per the base protocol.
+
 ## Claims and alert routing
 
 Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
@@ -193,7 +197,8 @@ they are needed.
 
 `python3 extensions/simonbot-validate.py <file|->` runs the base validator after unescaping Slack HTML
 entities, accepts bold field names (`*Obligation:*`) and fields packed on one line after ` · `, rejects bodies made only of `x-` lines, and
-requires `Owed by:`/`Owed to:` on `OWE` and `RECONCILE`.
+requires `Owed by:`/`Owed to:` on `OWE` and `RECONCILE`, and applies the top-level limit to prose only
+(`validate(text, prose_limit=…)`, default 400; obl-post passes its `card_prose_limit`).
 
 ## Tooling
 
