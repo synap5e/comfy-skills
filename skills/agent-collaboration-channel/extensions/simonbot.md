@@ -178,6 +178,13 @@ A card a person owes carries a headline, not the question: right after posting i
 is what they answer from. A decision card already states its question and options, so it needs none. obl raises
 `ask-unexplained` when a card a person owes has no such reply after 10 minutes.
 
+### ping-to-ask
+An @-mention pings the person, so use one only to ask them to do something about an obligation: on its card or in
+its thread. Write a name plain when you talk about someone ("owed by Deep", "thanks, Deep"). One ping per ask: a
+reminder is fine once time has passed, but back-to-back pings, especially with no reply in between, don't help.
+obl-post refuses a mention that talks about someone, isn't about an obligation, or repeats a recent one, unless
+it's confirmed (`--confirm-ping`).
+
 ### question-in-thread
 A question about an existing card goes in that card's thread (an item ask), not on a new card. The thread holds its
 context, the answer settles it where the work is tracked, and the card's owners see it. Post a new question card
