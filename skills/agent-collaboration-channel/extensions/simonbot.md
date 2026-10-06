@@ -142,6 +142,12 @@ a card owed by them, with a mention that notifies, makes it theirs to answer. Me
 now: a parked ask names its owner in plain text, and the mention goes in the wake's reply, since Slack doesn't notify
 mentions added by an edit.
 
+### explain-the-ask
+A card a person owes carries a headline, not the question: right after posting it, post the full ask in its thread
+(the context, exactly what you need from them, and by when). The headline is what the person scans; the thread reply
+is what they answer from. A decision card already states its question and options, so it needs none. obl raises
+`ask-unexplained` when a card a person owes has no such reply after 10 minutes.
+
 ### owe-outlives-turn
 Any commitment that outlives this turn gets an OWE card.
 Memory and Slack search are not reminders: a commitment that survives a turn, a compaction or a restart must be in the
