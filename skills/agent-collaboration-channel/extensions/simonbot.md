@@ -65,6 +65,12 @@ skill bumps its version).
   answer given in text), and its buttons give way to that record.
 - Parked items, and an agent's own blocked card, may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
+  The field may hold **several conditions**, separated by spaces or commas
+  (`x-simonbot-wake: on=OBL-068 event=pypi:comfy-agent at=2026-10-14T10:00-07:00`). The card wakes when the first
+  is met, and each condition fires once: the others stay armed, so the card wakes again at each later milestone. The
+  wake reply names the condition that fired. Machine-checked events: `event=<repo>#N-opened`,
+  `event=<repo>#N-merged`, `event=pypi:<package>` (its first release) and `event=pypi:<package>>=<version>`. Any
+  other `event=` is a plain-text condition. A condition already met when it is set doesn't fire.
 
 - Card length: a card's prose (headline and detail; field lines and link URLs excluded) stays within the
   deployment's card limit: obl-toolkit `card_prose_limit`, 1000 by default (Simon, 10-05). Other top-level posts stay
