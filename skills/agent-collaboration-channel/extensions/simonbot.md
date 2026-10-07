@@ -180,6 +180,21 @@ is always valid.
   `from:<participant>`, e.g. `[⚠️ finding · obl:OBL-005 · agent:qa-desktop · from:simon/assets-coordinator]`.
   `agent:` is the agent the line is about; `from:` is who posted it.
 
+## Agent-to-agent messages
+
+In a swarm that runs obl-toolkit, agents message each other with `obl-message`, not bare `agent-message`
+(obl-toolkit decisions 0016; design `docs/design/obl-message.md`):
+
+- `obl-message --to coordinator|buddy|<member> [--obl OBL-N] [--subject S-N|OBL-N] "…" --send`. Mail to the
+  coordinator is held while it's busy and arrives as one digest, grouped by card; mail to other members goes at once.
+- **From outside the swarm, message the coordinator** (or the buddy). Messaging a worker directly is refused, with
+  the command to reach the coordinator; `--direct --reason '…'` overrides it and is recorded.
+- Reply with the `--subject S-N` the digest shows, so the thread stays together. Mark an FYI `--no-reply`, and
+  don't send acknowledgements nobody asked for. `--urgent` skips the wait; a second urgent to the same recipient
+  within 55 min bounces unless you `--confirm`.
+- Every message, and what happened to it, is in the swarm's ledger (`obl messages`, `obl show OBL-N`).
+- Launch a handoff with `obl dispatch OBL-N -- <agent-handoff arguments>`: it posts the dispatched line for you.
+
 ## Rules
 
 Each rule is one `### <rule-name>`, and its first sentence is the reminder. obl-toolkit appends that sentence to the
@@ -282,6 +297,11 @@ Not an accepted contributor: reply politely that this swarm takes work only from
 obl-toolkit marks a human message from anyone not in the deployment's contributors.toml as not-a-contributor. It isn't
 relayed to claim holders; only the coordinator sees it. Admitting someone is one line in that file, picked up without a
 restart.
+
+### message-through-obl
+Message swarm agents with obl-message, and from outside a swarm message its coordinator.
+Coordinator mail batches into one digest while it works, the ledger keeps every message, and reaching workers around
+their coordinator splits its picture of the swarm.
 
 ### reread-after-compaction
 Re-read the extension's Rules section and your memory before the next action.
