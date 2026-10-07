@@ -35,6 +35,10 @@ skill bumps its version).
   ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧),
   and a card a person owes is itself a question to them (🙋🏼). The agent sets State; tools remind it when the State
   looks wrong, they don't flip it.
+- **A blocked card is left alone.** "Still blocked" isn't worth waking an agent for, so a `blocked` or `in-review`
+  card gets no reminders for being quiet. Its reminders are its own wake (an agent may set a wake field on its own
+  blocked card) and its dependents: when another card becomes blocked on it (`Waiting on: OBL-N`), the card waited on
+  hears about it, with the chain up to the card at its end and every card now hanging there.
 - **Holds:** the questions a card needs answered are listed on it, `Holds: <link|G1: keep the cap?>; <…> (blocking)`,
   each a link to the question asked in the card's thread. A hold blocks the card only when marked `(blocking)`.
   🙋🏼 follows the state emoji while any hold is open (`🛠️🙋🏼`). An answered question leaves `Holds:`.
@@ -57,7 +61,7 @@ skill bumps its version).
   the card's `Obligation:` (an item ask), not as a new card. Once answered, the question carries
   `Decision: <n> by <who> at <when>` (a choice) or `Decision: answered by <who> at <when> — <what they said>` (an
   answer given in text), and its buttons give way to that record.
-- Parked items may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
+- Parked items, and an agent's own blocked card, may also carry a machine-readable wake field, e.g. `x-simonbot-wake: on=OBL-099`,
   `event=#16719-merged` or `at=2026-10-12T09:00-07:00`. The plain-text wake condition stays authoritative.
 
 - Card length: a card's prose (headline and detail; field lines and link URLs excluded) stays within the
@@ -85,6 +89,8 @@ and asks nothing of other participants.
   `Claim:` from the card.
 - When an unreleased claim on an unresolved obligation passes `Claim until:`, only the coordinator and the claimant are
   alerted; the coordinator takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
+- A blocked card's claim lease is paused: it doesn't lapse while the card says `State: blocked`, and the time spent
+  blocked is added to `Claim until:` once it unblocks. Don't renew a claim just to say the card is still blocked.
 - An unclaimed thread goes to the coordinator.
 - A claim holder may post in its own claimed card's thread, about its own work only, tagged `agent:<name>`. With
   relaying on, the coordinator's watcher hands a human's reply in that thread to the holder's session (resolved from
@@ -229,7 +235,8 @@ moves the miss later.
 ### claim-lease
 Renew with an UPDATE carrying a new claim_until, or take the work back.
 A claim is a lease, not ownership: once it lapses with the work unresolved, either the holder renews it in the open or
-the coordinator takes the obligation back.
+the coordinator takes the obligation back. The lease is paused while the card is blocked, so a blocked card needs no
+renewal.
 
 ### wake-update
 Post the paired wake UPDATE and reopen the card before acting.
