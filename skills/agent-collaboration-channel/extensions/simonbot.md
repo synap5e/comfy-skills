@@ -32,9 +32,11 @@ skill bumps its version).
   "start" is a state change, never an owner flip. It carries `State:`, what is happening on it: `queued` 📥,
   `working` 🛠️, `blocked` 🚧, `in-review` 👀, `rehome` 📦 (we want to disown it: find it another home), `untracked`
   🗃️ (kept for the record, no longer tracked). `Status:` keeps the lifecycle (⏸️ parked, ✅ reconciled, 🚫 declined,
-  ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧),
-  and a card a person owes is itself a question to them (🙋🏼). The agent sets State; tools remind it when the State
-  looks wrong, they don't flip it.
+  ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧).
+  **A card a person owes is itself a question to them (🙋🏼)** and carries no `State:` (State is an agent's card's);
+  a `Waiting on:` naming only that person adds nothing, and it shows 🚧 only when it waits on someone or something
+  else. A question asked in a thread (QUESTION `→ <to>`) is addressed to the person who answers it, never to an
+  agent. The agent sets State; tools remind it when the State looks wrong, they don't flip it.
 - **A blocked card is left alone.** "Still blocked" isn't worth waking an agent for, so a `blocked` or `in-review`
   card gets no reminders for being quiet. Its reminders are its own wake (an agent may set a wake field on its own
   blocked card) and its dependents: when another card becomes blocked on it (`Waiting on: OBL-N`), the card waited on
