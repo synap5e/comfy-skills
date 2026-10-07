@@ -26,9 +26,19 @@ skill bumps its version).
   whom, and readers took the arrow as the direction of the debt.
 - Card layout, for scanning: headline first (status emoji and bold text), an optional italic detail line, then the
   fields packed with ` · ` on one meta line (`Obligation: · Status: · Owed by: · Owed to:`), with `Claim:`,
-  `Claim until:` and any wake field on a second. The headline emoji follows the status: 🙋 a human owes it, ⏳ an agent
-  owes it, then ⏸️ ✅ 🚫 ⌛ ↪️. A resolved headline is struck through, with the emoji outside the strike
-  (`✅ ~*…*~`). One field per line remains valid.
+  `Claim until:` and any wake field on a second. A resolved headline is struck through, with the emoji outside the
+  strike (`✅ ~*…*~`). One field per line remains valid.
+- **A feature is one agent-owned card** (`Owed by:` the agent, `Owed to:` the person who wants it) for its whole life;
+  "start" is a state change, never an owner flip. It carries `State:`, what is happening on it: `queued` 📥,
+  `working` 🛠️, `blocked` 🚧, `in-review` 👀, `rehome` 📦 (we want to disown it: find it another home), `untracked`
+  🗃️ (kept for the record, no longer tracked). `Status:` keeps the lifecycle (⏸️ parked, ✅ reconciled, 🚫 declined,
+  ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧),
+  and a card a person owes is itself a question to them (🙋🏼). The agent sets State; tools remind it when the State
+  looks wrong, they don't flip it.
+- **Holds:** the questions a card needs answered are listed on it, `Holds: <link|G1: keep the cap?>; <…> (blocking)`,
+  each a link to the question asked in the card's thread. A hold blocks the card only when marked `(blocking)`.
+  🙋🏼 follows the state emoji while any hold is open (`🛠️🙋🏼`). An answered question leaves `Holds:`.
+- `Superseded by: OBL-N` on a superseded card says where the work moved; a wake on the old card follows it.
 - A card may carry `Priority:` `P1`..`P4` (`urgent` is the same as `P1`): an optional, editable field that orders
   the work (boards, owe lists, the PR board) and shows 🔴 at P1. Unset sorts after `P4`. Only an open card carries it.
 - A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Waiting on:`,
@@ -170,7 +180,8 @@ sentence, and edit the rule here rather than in the tool. Informational alerts (
 agent, card status or claim changes) carry no rule.
 
 ### ask-is-owe
-A question to a person is a top-level OWE owed by them with a real @-mention; reply in the thread with the OBL id.
+A question about a card is a hold on that card (asked in its thread, listed on its `Holds:`). A question with no card
+to hang on is a top-level OWE owed by the person, with a real @-mention; reply in the thread with the OBL id.
 A question left in a thread or a terminal is invisible to the person and to every loop that tracks obligations; only
 a card owed by them, with a mention that notifies, makes it theirs to answer. Mention only when it can be answered
 now: a parked ask names its owner in plain text, and the mention goes in the wake's reply, since Slack doesn't notify

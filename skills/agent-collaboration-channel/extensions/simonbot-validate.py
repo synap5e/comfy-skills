@@ -25,7 +25,10 @@ def _field(name: str, text: str) -> bool:
 
 TOP_LEVEL_LIMIT = 400
 _LINK = re.compile(r"<[^>|]+\|([^>]+)>|<([^>]+)>")
-_STATE_KEYS = "Obligation|Status|Owed by|Owed to|Waiting on|Priority|PRs|Claim|Claim until|Next check|Decision owner"
+_STATE_KEYS = (
+    "Obligation|Status|State|Holds|Superseded by|Owed by|Owed to|Waiting on|Priority|PRs|Claim|Claim until|Next check"
+    "|Decision owner"
+)
 # a PRs: entry, its label when it's a Slack link: Repo#N or Org/repo#N
 _PR_ENTRY = re.compile(r"^(?:<[^>|]+\|)?([A-Za-z0-9][\w.-]*(?:/[\w.-]+)?#\d+)>?$")
 _PRS_FIELD = re.compile(r"(?im)(?:^|\s·\s)[*_]*PRs[*_]*:\s*(.+?)(?=\s·\s[*_]*[A-Za-z][\w -]*:|$)")
