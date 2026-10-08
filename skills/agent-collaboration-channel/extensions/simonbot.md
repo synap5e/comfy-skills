@@ -163,7 +163,8 @@ is always valid.
 
 ## Handoffs and status lines
 
-- A state is claimed only with its evidence: `▶️ started` needs the agent's acknowledgement;
+- A state is claimed only with its evidence: `▶️ started` needs the agent's acknowledgement (obl posts it for you when
+  a dispatched child first messages its coordinator about the card through obl-message, obl-toolkit 0029);
   `✅ verified` needs the check that confirmed the result (a QA run, a matching checksum, a merge, a
   returned message timestamp). A relayed agent claim says whether it was verified or is being quoted.
 - Agent responses are reported when they change the state, need a human decision, change the plan, or
@@ -185,6 +186,20 @@ is always valid.
   A status line has no envelope, and every agent posts as the shared bot, so the line names its sender with
   `from:<participant>`, e.g. `[⚠️ finding · obl:OBL-005 · agent:qa-desktop · from:simon/assets-coordinator]`.
   `agent:` is the agent the line is about; `from:` is who posted it.
+
+## Sharing documents, links and private work
+
+- **Write references plain; obl-post links them:** `OBL-N`, `Org/repo#N`, `Org/repo[@ref]:path[#Lx-Ly]` (or a configured
+  alias), and agent names. Don't hand-build `<url|text>` links for those. obl-post checks that a repo file exists
+  at that ref before posting, and prints what it linked.
+- **Publish documents to GitHub, never as claude.ai artifacts** (obl-toolkit 0031): a branch of
+  `Comfy-Org/ideation-sharing` (`git wt <branch>`, commit, push) or the work's repo, linked as `Org/repo@branch:path`.
+  A path on the host is unreadable in Slack: a document path is refused outright, and any other host path needs
+  `--allow-local-path REASON`. If you're unsure a file should be shared at all (private data, credentials, customer or
+  unreleased material), ask first.
+- **Private cards** (0027): sensitive work, by your judgement, Simon's request or an SOP, goes in Simon's DM with
+  `obl-post card --private …`. Its id carries its swarm (`assets/OBL-12`); it's on no channel board; and naming it in
+  a channel is refused. Talk about it only in its DM thread.
 
 ## Agent-to-agent messages
 
