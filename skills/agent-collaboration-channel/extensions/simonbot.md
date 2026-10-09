@@ -30,16 +30,16 @@ skill bumps its version).
   strike (`✅ ~*…*~`). One field per line remains valid.
 - **A feature is one agent-owned card** (`Owed by:` the agent, `Owed to:` the person who wants it) for its whole life;
   "start" is a state change, never an owner flip. It carries `State:`, what is happening on it: `queued` 📥,
-  `working` 🛠️, `blocked` 🚧, `in-review` 👀, `rehome` 📦 (we want to disown it: find it another home), `untracked`
+  `working` 🛠️, `blocked` 🚧, `rehome` 📦 (we want to disown it: find it another home), `untracked`
   🗃️ (kept for the record, no longer tracked). `Status:` keeps the lifecycle (⏸️ parked, ✅ reconciled, 🚫 declined,
   ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧).
   **A card a person owes is itself a question to them (🙋🏼)** and carries no `State:` (State is an agent's card's);
-  a `Waiting on:` naming only that person adds nothing, and it shows 🚧 only when it waits on someone or something
+  a `Blocked:` naming only that person adds nothing, and it shows 🚧 only when it waits on someone or something
   else. A question asked in a thread (QUESTION `→ <to>`) is addressed to the person who answers it, never to an
   agent. The agent sets State; tools remind it when the State looks wrong, they don't flip it.
-- **A blocked card is left alone.** "Still blocked" isn't worth waking an agent for, so a `blocked` or `in-review`
-  card gets no reminders for being quiet. Its reminders are its own wake (an agent may set a wake field on its own
-  blocked card) and its dependents: when another card becomes blocked on it (`Waiting on: OBL-N`), the card waited on
+- **A blocked card is left alone.** "Still blocked" isn't worth waking an agent for, so a `blocked` card, or one
+  under review, gets no reminders for being quiet. Its reminders are its own wake (an agent may set a wake field on its own
+  blocked card) and its dependents: when another card becomes blocked on it (`Blocked: OBL-N …`), the card waited on
   hears about it, with the chain up to the card at its end and every card now hanging there.
 - **Holds:** the questions a card needs answered are listed on it, `Holds: <link|G1: keep the cap?>; <…> (blocking)`,
   each a link to the question asked in the card's thread. A hold blocks the card only when marked `(blocking)`.
@@ -47,7 +47,7 @@ skill bumps its version).
 - `Superseded by: OBL-N` on a superseded card says where the work moved; a wake on the old card follows it.
 - A card may carry `Priority:` `P1`..`P4` (`urgent` is the same as `P1`): an optional, editable field that orders
   the work (boards, owe lists, the PR board) and shows 🔴 at P1. Unset sorts after `P4`. Only an open card carries it.
-- A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Waiting on:`,
+- A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Holds:`,
   optional, edited as PRs open (`PRs: <https://github.com/Comfy-Org/cloud/pull/12|cloud#12>, Comfy-Org/ComfyUI#16810`).
   Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
   only when it maps to exactly one repo the deployment configures; otherwise write `Org/repo#N`. It isn't a fixed
@@ -75,6 +75,34 @@ skill bumps its version).
 - Card length: a card's prose (headline and detail; field lines and link URLs excluded) stays within the
   deployment's card limit: obl-toolkit `card_prose_limit`, 1000 by default (Simon, 10-05). Other top-level posts stay
   at or under 400 when practical, per the base protocol.
+
+## Asks, reviews and merges
+
+Every card that waits on a person says what they must do and where. obl refuses a change that would leave it without
+that, and the board shows each ask as Card · Do · Where · Waiting.
+
+- **Every ask is a question in the card's thread**: one `obl-post ask --obl OBL-N --to <person> '<question>'` per
+  decision. Use `--option` for choices (one button each), with Approve/Revise options for approvals, and `--blocking`
+  when the card's own work stops on it. There is no ask field; questions are the only way to ask.
+- **Questions carry keys.** Each shows as `Q2 · …`; its full key is `OBL-N-Q-M`. A person can answer in text by naming
+  the key (`Q2: b`). Record a text answer with
+  `obl-post answer OBL-N --ask <ts> --by <person> --from <their message> --text '…'`. A decision is attributed to a
+  person only with their message as evidence.
+- **Replace your own question, don't answer it**: `obl-post answer OBL-N --ask <old ts> --withdraw --superseded-by
+  <new ts>`. A handover (`yield`) leaves questions open for the person; it answers nothing.
+- **Reviews are first-class.** `obl-post review OBL-N --pr Org/repo#N --reviewer <person>` on the author agent's card.
+  GitHub's requested reviewers decide whose move it is; changes requested return it to the author. Don't hand-set
+  `in-review`, and don't ask for a review in prose.
+- **Merging is a question too.** When the review is approved, obl prompts `obl-post merge-ask OBL-N`, which asks the
+  Operator: merge if green · update the branch from main, then merge when green · hold. The author carries out the
+  choice; obl never merges. The question is withdrawn automatically when it no longer applies.
+- **Blocked names its blocker**: `--blocked '<short reason>'`. Name the card it waits on (`OBL-12`) to be woken when
+  that card closes. Name a person only if they really are next; that puts the card on them, and it then needs a
+  question.
+- **The update reply says why.** obl adds who the card now waits on (`@<person> please decide: … → Q2`). Your reply
+  gives the reason, not "restated the ask".
+- **The Operator** is the swarm's principal (Simon). Refer to them by role in your own text ("Operator picked 1"),
+  not by Slack display name. The buttons and recorded answers are the record.
 
 ## Claims and alert routing
 
@@ -224,7 +252,8 @@ sentence, and edit the rule here rather than in the tool. Informational alerts (
 agent, card status or claim changes) carry no rule.
 
 ### ask-is-owe
-A question about a card is a hold on that card (asked in its thread, listed on its `Holds:`). A question with no card
+A question about a card is a hold on that card (asked in its thread, listed on its `Holds:`). How to ask, review and
+merge: [Asks, reviews and merges](#asks-reviews-and-merges). A question with no card
 to hang on is a top-level OWE owed by the person, with a real @-mention; reply in the thread with the OBL id.
 A question left in a thread or a terminal is invisible to the person and to every loop that tracks obligations; only
 a card owed by them, with a mention that notifies, makes it theirs to answer. Mention only when it can be answered
@@ -242,17 +271,19 @@ An @-mention pings the person, so use one only to ask them to do something about
 its thread. Write a name plain when you talk about someone ("owed by Deep", "thanks, Deep"). One ping per ask: a
 reminder is fine once time has passed, but back-to-back pings, especially with no reply in between, don't help.
 obl-post refuses a mention that talks about someone, isn't about an obligation, or repeats a recent one, unless
-it's confirmed (`--confirm-ping`).
+it's confirmed (`--confirm-ping`). obl's own "please" line on an update is exempt; your own mentions still go
+through the guard.
 
 ### question-in-thread
 A question about an existing card goes in that card's thread (an item ask), not on a new card. The thread holds its
 context, the answer settles it where the work is tracked, and the card's owners see it. Post a new question card
-only when the question is really a new obligation.
+only when the question is really a new obligation. See [Asks, reviews and merges](#asks-reviews-and-merges).
 
 ### record-text-answers
 When a question is answered in text, whether in its thread, another channel or your terminal, record the answer on
-the question (`obl-post answer OBL-x [--ask <ts>] --choice N` or `--text '…'`) so it no longer looks open and its
-buttons give way to the answer. obl raises `ask-answered-in-text` when a person replies after an open question; it
+the question (`obl-post answer OBL-x --ask <ts> --by <person> --from <their message> --choice N` or `--text '…'`) so
+it no longer looks open and its buttons give way to the answer. A text answer naming a key (`Q2: b`) answers that
+question; a decision is attributed to a person only with their message as evidence. obl raises `ask-answered-in-text` when a person replies after an open question; it
 can't see a terminal, so there it's on you.
 
 ### owe-outlives-turn
