@@ -29,11 +29,14 @@ skill bumps its version).
   `Claim until:` and any wake field on a second. A resolved headline is struck through, with the emoji outside the
   strike (`✅ ~*…*~`). One field per line remains valid.
 - **A feature is one agent-owned card** (`Owed by:` the agent, `Owed to:` the person who wants it) for its whole life;
-  "start" is a state change, never an owner flip. It carries `State:`, what is happening on it: `queued` 📥,
-  `working` 🛠️, `blocked` 🚧, `rehome` 📦 (we want to disown it: find it another home), `untracked`
-  🗃️ (kept for the record, no longer tracked). `Status:` keeps the lifecycle (⏸️ parked, ✅ reconciled, 🚫 declined,
-  ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working (🛠️), one that waits as blocked (🚧).
-  **A card a person owes is itself a question to them (🙋🏼)** and carries no `State:` (State is an agent's card's);
+  "start" is a state change, never an owner flip. It carries `State:`, what is happening on it: `proposed` 📥 (a
+  non-coordinator's work card, waiting for the coordinator's `obl-post triage`), `queued` 📥, `working` 🛠️, `blocked`
+  🚧, `rehome` 📦 (we want to disown it: find it another home), `untracked` 🗃️ (kept for the record, no longer
+  tracked), `done` ☑️ (finished but still open). A card with `Review:` shows 👀. `Status:` keeps the lifecycle
+  (⏸️ parked, ✅ reconciled, 🚫 declined, ⌛ lapsed, ↪️ superseded). With no `State:`, an agent's card reads as working
+  (🛠️), one that waits as blocked (🚧). **One emoji, one meaning** (obl decision 0040).
+  **Whose turn:** 🙋🏼 means the Operator's turn and 👤 another person's, on the headline and the board alike.
+  **A card a person owes is itself a question to them (🙋🏼 or 👤)** and carries no `State:` (State is an agent's card's);
   a `Blocked:` naming only that person adds nothing, and it shows 🚧 only when it waits on someone or something
   else. A question asked in a thread (QUESTION `→ <to>`) is addressed to the person who answers it, never to an
   agent. The agent sets State; tools remind it when the State looks wrong, they don't flip it.
@@ -43,7 +46,11 @@ skill bumps its version).
   hears about it, with the chain up to the card at its end and every card now hanging there.
 - **Holds:** the questions a card needs answered are listed on it, `Holds: <link|G1: keep the cap?>; <…> (blocking)`,
   each a link to the question asked in the card's thread. A hold blocks the card only when marked `(blocking)`.
-  🙋🏼 follows the state emoji while any hold is open (`🛠️🙋🏼`). An answered question leaves `Holds:`.
+  🙋🏼 (the Operator) or 👤 (another person) follows the state emoji while a question to them is open (`🛠️🙋🏼`).
+  An answered question leaves `Holds:` and shows ✅; a withdrawn one shows 🗑️.
+- **Replies lead with their kind**, not the card's headline: 🔒 claim, 🔓 release, 🔗 PRs changed, 👀 review
+  recorded, ✏️ correction, ⏰ wake, 🔺 priority; a state or status change leads with the new state's or status's emoji.
+  A reply that changes nothing on the card has no emoji.
 - `Superseded by: OBL-N` on a superseded card says where the work moved; a wake on the old card follows it.
 - A card may carry `Priority:` `P1`..`P4` (`urgent` is the same as `P1`): an optional, editable field that orders
   the work (boards, owe lists, the PR board) and shows 🔴 at P1. Unset sorts after `P4`. Only an open card carries it.
@@ -116,12 +123,12 @@ and asks nothing of other participants.
 - While a claim is active, its holder gets every message in that thread, card edits included.
 - Everyone else, the coordinator included, gets only:
   - status lines whose state changes the picture: `✅ verified`, `❌ failed`, `❓ question`, `🚧 blocked`,
-    `🔁 bounce`, `↩️ corrected`;
+    `🔁 bounce`, `✏️ corrected`, `👀 review` (a spec ready for the coordinator);
   - a change to the card's status or claim;
   - a message that mentions them (`<@USER>`, `<@BOT>:agent-name`, or `@agent-name`; an agent suffix narrows a shared
     bot's mention to that agent);
   - lane-health alarms.
-- A claim is released by a later `✅`/`❌` status line for its obligation, by the card resolving, or by removing
+- A claim is released by a later `✅`/`❌` status line about its holder (or naming no agent), by the card resolving, or by removing
   `Claim:` from the card.
 - When an unreleased claim on an unresolved obligation passes `Claim until:`, only the coordinator and the claimant are
   alerted; the coordinator takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
@@ -209,7 +216,9 @@ is always valid.
   Human replies in that thread then go to the coordinator, not to the holder, which can't answer there.
 
   States: `📝 requested`, `📤 dispatched`, `▶️ started`, `✅ verified`, `⏸️ parked`, `❓ question`,
-  `🚧 blocked`, `⚠️ finding`, `🔁 bounce`, `↩️ corrected`, `❌ failed`.
+  `🚧 blocked`, `⚠️ finding`, `🔁 bounce`, `✏️ corrected`, `👀 review`, `⏹️ closed`, `❌ failed`; `🔀 yielded` and
+  `🔀 shared` hand a thread over, `↩️ pass-back` returns it. Close a finished child with `obl children --close`, never
+  by asking it to exit.
 
   A status line has no envelope, and every agent posts as the shared bot, so the line names its sender with
   `from:<participant>`, e.g. `[⚠️ finding · obl:OBL-005 · agent:qa-desktop · from:simon/assets-coordinator]`.
