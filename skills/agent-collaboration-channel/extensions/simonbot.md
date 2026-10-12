@@ -44,7 +44,7 @@ skill bumps its version).
   under review, gets no reminders for being quiet. Its reminders are its own wake (an agent may set a wake field on its own
   blocked card) and its dependents: when another card becomes blocked on it (`Blocked: OBL-N …`), the card waited on
   hears about it, with the chain up to the card at its end and every card now hanging there.
-- **Holds:** the questions a card needs answered are listed on it, `Holds: <link|G1: keep the cap?>; <…> (blocking)`,
+- **Holds:** the questions a card needs answered are listed on it, `Holds: <link|Q1: keep the cap?>; <…> (blocking)`,
   each a link to the question asked in the card's thread. A hold blocks the card only when marked `(blocking)`.
   🙋🏼 (the Operator) or 👤 (another person) follows the state emoji while a question to them is open (`🛠️🙋🏼`).
   An answered question leaves `Holds:` and shows ✅; a withdrawn one shows 🗑️.
@@ -59,6 +59,10 @@ skill bumps its version).
   Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
   only when it maps to exactly one repo the deployment configures; otherwise write `Org/repo#N`. It isn't a fixed
   field: adding or dropping a PR is a normal card change with its paired reply.
+- A card may carry `Feedback: open` or `Feedback: invite` (obl decision 0038): people outside the swarm (guests) may
+  then report problems in its thread, anyone for `open`, only the named people for `invite`. No field means off. For
+  each guest report, record one choice (`obl-post guest OBL-N --msg TS --act` for a fix within the card's scope, or
+  `--escalate operator|<contributor>`), then its `--outcome`. Guests can't add work or steer the card.
 - An agent's name may be written as a link to its agent-link address while the agent is alive:
   `<agent-link://<host>/<session id>|simon/qa>` in Slack text, or `[simon/qa](agent-link://…)` in markdown. **Read
   the label as the agent's id**, wherever the link appears (prose or a field value such as `Owed by:`). The target is
@@ -98,14 +102,14 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 - **Replace your own question, don't answer it**: `obl-post answer OBL-N --ask <old ts> --withdraw --superseded-by
   <new ts>`. A handover (`yield`) leaves questions open for the person; it answers nothing.
 - **Reviews are first-class.** `obl-post review OBL-N --pr Org/repo#N --reviewer <person>` on the author agent's card.
-  GitHub's requested reviewers decide whose move it is; changes requested return it to the author. Don't hand-set
-  `in-review`, and don't ask for a review in prose.
+  GitHub's requested reviewers decide whose move it is; changes requested return it to the author. The `Review:`
+  field replaced the old `in-review` state, which is retired. Don't ask for a review in prose.
 - **Merging is a question too.** When the review is approved, obl prompts `obl-post merge-ask OBL-N`, which asks the
   Operator: merge if green · update the branch from main, then merge when green · hold. The author carries out the
   choice; obl never merges. The question is withdrawn automatically when it no longer applies.
 - **Blocked names its blocker**: `--blocked '<short reason>'`. Name the card it waits on (`OBL-12`) to be woken when
   that card closes. Name a person only if they really are next; that puts the card on them, and it then needs a
-  question.
+  question. `Waiting on:` is the old form of `Blocked:`: read it the same way, but don't write it.
 - **The update reply says why.** obl adds who the card now waits on (`@<person> please decide: … → Q2`). Your reply
   gives the reason, not "restated the ask".
 - **The Operator** is the swarm's principal (Simon). Refer to them by role in your own text ("Operator picked 1"),
@@ -145,14 +149,16 @@ and asks nothing of other participants.
   - a change to the card's status or claim;
   - a message that mentions them (`<@USER>`, `<@BOT>:agent-name`, or `@agent-name`; an agent suffix narrows a shared
     bot's mention to that agent);
-  - lane-health alarms.
+  - feed-health alarms.
 - A claim is released by a later `✅`/`❌` status line about its holder (or naming no agent), by the card resolving, or by removing
   `Claim:` from the card.
 - When an unreleased claim on an unresolved obligation passes `Claim until:`, only the coordinator and the claimant are
   alerted; the coordinator takes the obligation back or nudges the holder. Its thread then routes as unclaimed.
 - A blocked card's claim lease is paused: it doesn't lapse while the card says `State: blocked`, and the time spent
   blocked is added to `Claim until:` once it unblocks. Don't renew a claim just to say the card is still blocked.
-- An unclaimed thread goes to the coordinator.
+  A yield's deadline (24 h by default) is different: it keeps running while the card is blocked.
+- An unclaimed thread goes to the coordinator in an exclusive channel. In a shared channel (such as owners), it goes
+  to the card's owner if that owner's watcher is live, otherwise to the router.
 - A claim holder may post in its own claimed card's thread, about its own work only, tagged `agent:<name>`. With
   relaying on, the coordinator's watcher hands a human's reply in that thread to the holder's session (resolved from
   the dispatched status line), without interrupting the coordinator: the thread is the record, read at report-back. Questions about scope, or needing Simon's decision,
@@ -165,8 +171,8 @@ and asks nothing of other participants.
   not who posted it. A post from the bot with no envelope and no inherited sender (top-level, or under a
   human's plain post) is the coordinator's own, since a bare mention of the bot already goes to the coordinator.
 
-Lane health: a silent lane counts as blind, not calm. If no channel event arrives for a configured interval while
-obligations are open, or if the watcher reports the lane stale or disconnected, every participant is alerted.
+Feed health: a silent feed counts as blind, not calm. If no channel event arrives for a configured interval while
+obligations are open, or if the watcher reports the feed stale or disconnected, every participant is alerted.
 
 The reference implementation is `should_alert(participant, event)` in `~/agentic/obl-toolkit`
 (`src/obl_toolkit/routing.py`). Every harness uses that one function, so they can't drift apart.
@@ -283,11 +289,125 @@ In a swarm that runs obl-toolkit, agents message each other with `obl-message`, 
 - Every message, and what happened to it, is in the swarm's ledger (`obl messages`, `obl show OBL-N`).
 - Launch a handoff with `obl dispatch OBL-N -- <agent-handoff arguments>`: it posts the dispatched line for you.
 
+## Vocabulary
+
+These are the words that belong to this extension and to obl. Agents may use them on Slack without explaining them,
+and obl-post's jargon check doesn't flag them; any other jargon still gets explained (`plain-for-humans`). Someone new
+to a swarm should read this list once. Adding or retiring a term is a deliberate edit to this section.
+**finding**, **ingest**, **lease** and **deployment** are listed but not exempt: they mean other things in some swarms,
+so a post to a person explains them.
+
+**Cards**
+- **obligation** (OBL, OBL-12): one tracked piece of work or request. Its id only means something inside its swarm.
+- **card**: the Slack message for one obligation. It's edited as things change, and the discussion goes in its thread.
+- **headline**: a card's first, bold line, saying what's asked or what happened in one sentence.
+- **OWE**: the label on a card that records something one party owes another.
+- **RECONCILE**: the reply that closes a card and records how it ended.
+- **envelope**: the bracketed first line of an agent's post: the kind of message, who sent it, and what work it's about.
+- **status line**: a one-line bracketed note in a card's thread recording a step, such as a hand-over or a passed check.
+- **private card**: a card for sensitive work, kept in Simon's direct messages and off every channel board.
+- **board** (live board): a Slack message listing the swarm's open cards, kept current by obl. Change the cards, not it.
+- **PR board**: a board of the pull requests (proposed code changes) that the cards are delivering.
+
+**Card status** (`Status:`, whether the card is still live)
+- **open**: still live.
+- **parked** ⏸️: paused on purpose until its wake. Nothing is needed before then.
+- **reconciled** ✅: closed: the work is done or the question answered, and the card says so.
+- **declined** 🚫: closed without being done; the request was turned down.
+- **superseded** ↪️: replaced by another card, named in `Superseded by:`. Follow that one.
+
+**Card state** (`State:`, what's happening on an agent's card; the agent keeps it true)
+- **proposed** 📥: posted by an agent other than the coordinator. Nothing starts until the coordinator triages it.
+- **queued** 📥: accepted by its agent, but nobody is working on it yet. It doesn't mean it's waiting on you.
+- **working** 🛠️: an agent is on it.
+- **blocked** 🚧: can't go on until the reason in `Blocked:` clears or a blocking question is answered.
+- **rehome** 📦: we want to hand it off; it needs another owner.
+- **untracked** 🗃️: kept for the record, no longer followed.
+- **done** ☑️: finished, but the card isn't closed yet.
+- **whose turn** (🙋🏼, 👤): 🙋🏼 means the Operator must act or answer; 👤 means another person must.
+
+**Card fields**
+- **Owed by / Owed to**: who has to act next, and who the result is for.
+- **Holds** (hold): the questions the card needs answered, each linked to where it was asked. Only `(blocking)` ones
+  stop the work.
+- **Blocked**: the short reason the card can't go on. If it names another card, this card wakes when that one closes.
+- **Waiting on**: the older form of `Blocked:`, read the same way and no longer written.
+- **Claim / Claim until** (lease): an agent marking the card as its to work on until a set time. It renews in the open
+  or the coordinator takes the work back; the clock stops while the card is blocked.
+- **Review**: the pull request under review and who reviews it. GitHub decides whose move it is.
+- **PRs**: the pull requests the card is delivered through.
+- **Priority** (P1 to P4, urgent): how urgent the card is. P1, the same as urgent, is the most urgent and shows 🔴.
+- **Deciders**: the people whose clicks count as the answer to the card's questions.
+- **Decision**: the record of who answered, what they chose or said, and when.
+- **Triage**: the coordinator's recorded call on a proposed card: who does it, how and when.
+- **Feedback**: whether guests may report problems in this card's thread (`open`, or `invite` for named people). No
+  field means no.
+
+**Who's who**
+- **Operator**: the person the swarm works for (Simon). Agents refer to him by this role.
+- **SimonBot** (the shared bot): the one Slack account all of Simon's agents post through. The envelope or `from:`
+  says which agent wrote the message.
+- **participant**: a person or agent obl knows, so it can route messages and pings to them.
+- **contributor**: a person the swarm takes work from. Requests from anyone else get a polite no.
+- **guest**: someone who isn't a contributor but may report problems on a card whose Feedback lets them.
+- **swarm**: a group of agents led by a coordinator, working on one area in its own Slack channel.
+- **deployment**: one obl setup, with its own channel, records and board. Usually one swarm.
+- **coordinator**: a swarm's lead agent. It takes requests, makes cards, hands out the work and reports back.
+- **child**: a helper agent the coordinator starts for one card.
+- **holder**: the agent holding a card's claim. People's replies in that card's thread go to it.
+- **buddy**: a second agent that checks the coordinator's work and points out what it missed (config key `auditors`).
+- **owner**: an agent responsible for one project. In a shared channel, each owner hears only its own cards.
+- **router**: in a shared channel, the agent that gets requests nobody was named on and hands each to the right owner.
+- **harness**: the program that runs an agent (Claude Code or Codex, say), with its setup.
+
+**Working on a card**
+- **handoff**: starting a new agent with a written brief for one task.
+- **dispatched** 📤: handed to a helper agent. The status line says which agent, and when to expect news.
+- **started** ▶️: the helper agent confirmed it has begun.
+- **verified** ✅: the result was confirmed by a check, not just reported.
+- **failed** ❌: the work or its check didn't succeed.
+- **finding** ⚠️: a problem raised by a check, review or test that someone should look at.
+- **corrected** ✏️: an earlier report on this card was wrong; this sets it right.
+- **closed** ⏹️: the helper agent was shut down once its work was finished.
+- **wake** ⏰: the time or event that reopens a parked card, or prompts a blocked one.
+- **yield / share** 🔀: hand a card's thread to another agent so replies go to it; sharing keeps the first agent
+  hearing them too. A yield lasts 24 h by default, blocked or not.
+- **pass-back** ↩️: the thread goes back to the agent that handed it over.
+- **relay**: passing a person's reply in a held thread on to the agent holding it.
+- **SOP**: a written procedure an agent follows for one kind of work.
+- **ship-pr**: Simon's step-by-step procedure for building and shipping a pull request.
+- **compaction**: an agent's conversation is summarized to save space. Details can be lost, so it re-reads its rules.
+
+**Asks and answers**
+- **ask** (question): a question to a person, posted in the card's thread, with a button for each choice.
+- **question key** (Q2, OBL-12-Q-2): a question's number on its card. Answer in text by naming it (`Q2: b`).
+- **blocking**: marks a question the card's work stops on until it's answered.
+- **decision**: a question with numbered options. The click, or a recorded text answer, settles it.
+- **merge question**: once a review is approved, the Operator picks: merge, update the branch and then merge, or hold.
+- **front desk**: a standing message where anyone can reply with a new request. It's routed, and the reply names its
+  card.
+- **inbox** ✉️: an owner's own standing message for requests meant for that owner.
+
+**Tools**
+- **obl** (obl-toolkit): the tool that tracks cards. It reads the channel, keeps the records, runs the checks and the
+  boards, and alerts agents. It never assigns work.
+- **obl-post**: the command agents use to post and change cards, questions and replies. It refuses posts that break
+  these rules.
+- **obl-message**: how agents in a swarm message each other. Mail to a busy coordinator arrives as one batch.
+- **obl check**: obl's regular look for anything that slipped. Each problem it reports is a finding.
+- **watcher** (obl-watch): the background job that tells one agent about the messages meant for it.
+- **ingest** (obl-ingest): the job that copies the channel's messages into obl's records.
+- **feed** (formerly lane): how obl hears the channel live, and whether that works. A silent feed counts as broken.
+- **ledger**: obl's lasting record of every card and message. A promise that isn't in it gets forgotten.
+- **slack-msg**: posts a plain Slack message with none of obl's checks. Agents use obl-post instead.
+- **agent-message**: the general tool for messaging another agent's session. Inside a swarm, agents use obl-message.
+- **cmdwatch**: runs a long job in the background and tells the agent when it prints something or ends.
+
 ## Rules
 
 Each rule is one `### <rule-name>`, and its first sentence is the reminder. obl-toolkit appends that sentence to the
 alerts and findings the rule governs (`‖ rule:<name>: <reminder>`), so it must work alone as an instruction. Keep one
-sentence, and edit the rule here rather than in the tool. Informational alerts (lane, silence, ingest down, a stalled
+sentence, and edit the rule here rather than in the tool. Informational alerts (feed, silence, ingest down, a stalled
 agent, card status or claim changes) carry no rule.
 
 ### ask-is-owe
@@ -436,7 +556,7 @@ To wire in a participant in Simon's swarm, run each job under `cmdwatch` so its 
 - `obl check --loop 300`, run by the coordinator. It prints new findings.
 - `obl watch-session <id> --as <participant>`. The coordinator registers itself, and registers each handoff when it
   launches it. Watched sessions raise a compaction alert, and the waiting-on-human check when that is enabled. Both go
-  to the coordinator and to any configured auditor (a buddy bot backstopping the coordinator).
+  to the coordinator and to any configured buddy (a bot backstopping the coordinator; its config key is `auditors`).
 
 What to do with each finding:
 
@@ -450,4 +570,4 @@ What to do with each finding:
 | parked wake | Post the wake `UPDATE`, then reopen, re-park or reconcile. |
 | waiting on a human | Post the question to the channel as an `OWE` owed by the human, with the session it came from. |
 | a watched session compacted | Once it is idle, check its summary still holds the rules, SOPs and work in progress, and tell it exactly what was lost. |
-| lane stale or silent, ingest down | Treat the lane as blind, not calm. Read the channel directly until it recovers, and tell Simon if it doesn't. |
+| feed stale or silent, ingest down | Treat the feed as blind, not calm. Read the channel directly until it recovers, and tell Simon if it doesn't. |
