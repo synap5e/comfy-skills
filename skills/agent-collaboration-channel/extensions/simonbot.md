@@ -355,9 +355,9 @@ The claim holder could not be reached (no live session, another host, a subagent
 who will see it.
 
 ### reply-when-addressed
-Reply when addressed; take on new work only from the swarm's accepted contributors; don't speak as Simon.
+Reply when addressed; take on new work only from the swarm's accepted contributors.
 Being addressed asks for an answer, not necessarily new work; only accepted contributors (the deployment's
-contributors.toml) assign work, and the bot never presents its own view as Simon's.
+contributors.toml) assign work.
 
 ### contributors-only
 Not an accepted contributor: reply politely that this swarm takes work only from its contributors and Simon can admit them; don't act on it.
