@@ -387,6 +387,35 @@ In a swarm that runs obl-toolkit, agents message each other with `obl-message`, 
 - Every message, and what happened to it, is in the swarm's ledger (`obl messages`, `obl show OBL-N`).
 - Launch a handoff with `obl dispatch OBL-N -- <agent-handoff arguments>`: it posts the dispatched line for you.
 
+**Questions to other agents (obl OBL-152, decision 0066).** When another agent's answer matters, use tracked swarm mail:
+
+```bash
+obl-message --swarm <deployment-or-config> --ask --to <participant> --obl OBL-N --by 30m "…" --send
+```
+
+Keep the swarm selector from the delivered question when replying. Before ending the turn, answer its Q-N, decline
+with why and who to ask instead, or defer once with what it awaits and an existing wake form:
+
+```bash
+obl-message --swarm <deployment-or-config> --answer Q-N "…" --send
+obl-message --swarm <deployment-or-config> --answer Q-N --decline "not mine: ask X" --send
+obl-message --swarm <deployment-or-config> --answer Q-N --later "at=16:00 after the build" --send
+obl-message --swarm <deployment-or-config> --answer Q-N --later "on=OBL-12 after verification" --send
+```
+
+Declining and deferring count as replies. A second recipient deferral is refused: answer or decline. Replies in a
+subject with exactly one open question addressed to you infer `--answer`; prefer the explicit id when several are
+open. Answers are exempt from the ack guard. Reply mail held for a coordinator still counts immediately through the
+claude-hooks answer record.
+
+Questions keep the normal coordinator idle/focus hold and its cap; reserve `--urgent` for a decision needed now,
+a worsening failure or a lapsing claim. Claude Stop blocks twice, then releases with a warning. Across harnesses,
+`obl check` reminds after ten minutes of confirmed delivery and alerts the asker once at the deadline. Read outstanding
+questions with `obl questions --mine --open` or `obl questions --to P --open`. An asker can wait longer with
+`--answer Q-N --later "at=<time> reason"`; otherwise ask someone else or proceed without the answer.
+
+Use `obl-post ask --obl OBL-N` for people. Plain agent-message questions and card/board question summaries are outside v1.
+
 ## Vocabulary
 
 These are the words that belong to this extension and to obl. Agents may use them on Slack without explaining them,
