@@ -133,6 +133,69 @@ recorded and the hold becomes a non-blocking `follow-up owed by <who>`: people g
 shows on their board; agents get their normal alerts. Close it with `obl-post answer OBL-N --ask TS --followup-done
 --from <the answer or the evidence> --send`, or by resolving the card.
 
+**Typed asks (obl OBL-4).** Use one durable agent-owned card. Ask for a person's decision or access in that card's thread.
+Do not add an Other button: a person can answer outside the options with `Q2. do X`.
+Record that answer with `obl-post answer OBL-N --ask TS --by PERSON --from MESSAGE_TS --text 'do X' --send`.
+
+**Typed asks: approving an action (obl OBL-4).**
+
+```sh
+obl-post ask --obl OBL-N --to simon --type approve 'Merge the approved PR.' \
+  --target https://github.com/Org/repo/pull/123 --reversible yes --send
+```
+
+Supply the action as one sentence, a target URL (PR, commit, card or doc), and `--reversible yes|no`.
+The buttons are Approve / Revise. Keep the existing `--shape batch-accept --cost low --recommend 1`
+for eligible reversible batch approvals; existing opt-in and notice/undo rules still apply.
+Merging in any Comfy-Org GitHub repo always requires human sign-off. Merge asks never auto-answer;
+approval asks targeting a Comfy-Org PR or branch also never auto-answer, including batch-accept approvals.
+Wait for the person's explicit approval before merging.
+
+Reversible does not imply low cost. An irreversible approval forces high cost; access never auto-answers.
+
+After Approve, carry out the action and record its evidence:
+
+```sh
+obl-post follow-through OBL-N --ask TS --evidence 'Merged https://github.com/Org/repo/pull/123' --send
+```
+
+The default deadline is four hours (`approve_follow_through_hours` in config.toml).
+`obl check` raises `approved-not-done` to the card owner when evidence is missing, including on resolved cards.
+An `Evidence:` field on the card naming the question key and a link, commit, post or merged state also counts.
+A status line can name the question key with `--field ask=OBL-N-Q-2` and put evidence in `--note`.
+An unrelated link or “working on it” does not count. Do not mark evidence before doing the action.
+
+**Typed asks: access only the person can provide.**
+
+```sh
+obl-post ask --obl OBL-N --to simon --type access 'sudo make install' \
+  --where 'medina, tmux build, window 2' --why 'sudo requires your password' \
+  --unblocks 'make install, then smoke-test the installed binary' --blocking --send
+```
+
+Give the exact command/action as ITEM, where to run it (host, session or window), why you cannot do it,
+and what it unblocks. Buttons are Done / Not now / Why me? / Try resolving it yourself.
+The last three are deferrals using OBL-139's follow-up handling: Not now is owed by the answerer;
+Why me? and Try resolving it yourself are owed by the asker. Revise on an approve ask also returns to the asker.
+The hold becomes non-blocking. Report back, then close it with
+`obl-post answer OBL-N --ask TS --followup-done --from MESSAGE_TS --send`, using the follow-up owner's report.
+For free-text deferrals, explicitly use `answer --followup asker|answerer --from MESSAGE_TS`.
+“Try resolving it yourself” means find another way and report back on the card;
+it is not permission to assume access is available.
+
+After Done, re-run the blocked step within one hour (`access_verify_hours` in config.toml) and record pass/fail:
+
+```sh
+obl-post follow-through OBL-N --ask TS --result pass --evidence 'make install: exit 0; smoke test passed' --send
+obl-post follow-through OBL-N --ask TS --result fail --evidence 'make install: exit 1, permission denied' --send
+```
+
+`access-not-verified` flags a missing retry report. A fail posts the result, reopens the same ask with the same
+question key and restores its original blocking hold. Do not start a replacement ask. A subsequent Done starts a
+fresh one-hour verification window; previous retry evidence does not discharge it. Record the actual retried step
+and output, not merely that the person clicked Done. A report is the agent's attestation, not an automatic execution
+of the command; obl never runs access commands from Slack.
+
 ## Claims and alert routing
 
 Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
