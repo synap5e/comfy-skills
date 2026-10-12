@@ -196,6 +196,19 @@ fresh one-hour verification window; previous retry evidence does not discharge i
 and output, not merely that the person clicked Done. A report is the agent's attestation, not an automatic execution
 of the command; obl never runs access commands from Slack.
 
+**Request verbs (obl OBL-113).** Read the watcher's verb parse and the card's `Verbs:` field before working. Route
+verb requests with `obl-post card ... --request <original message timestamp>`; never retype, omit or weaken their
+verbs. If refused, reply in the request thread with the exact refusal and wait for a corrected request. Several of
+`self`, `subagent`, `delegate`, `handoff` are permissions to choose among; state your choice in the first card reply.
+`self` means do it directly without helpers. `subagent` means one short-lived in-session helper; post its result
+yourself. `delegate` means an existing agent: use `obl-message --obl OBL-N` or yield the thread to it. `handoff` means
+a written brief and a new agent launched through `obl dispatch`; supervise and verify it. `contextonly` means answer
+from this session, the card and a few Slack threads; do not investigate, read code or run commands. Tell delegates the
+same restriction. If unsure, say that answering would need investigation. `yield` means the worker receives replies
+and posts the result itself. On `waitme`, write the summary and stop until the Operator answers Q0; a deferral is not
+the description. On a parked or blocked request, wait for its wake and record the wake update before acting. Keep
+private work in its DM. Ask the Operator before going outside the allowed methods.
+
 ## Claims and alert routing
 
 Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
