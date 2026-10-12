@@ -266,7 +266,7 @@ router and general owner.
   and its scratch directory. It owns no project. It may read other projects but sends changes to their owner. Work
   that becomes an ongoing project needs the Operator's approval and a new owner.
 - For a quick answer, answer in the original thread and post `obl-post pass-back --thread <ts> --note answered --as
-  simon/general --send`. This settles the front-desk request without a card. Promote it to a card when it promises
+  simon/general --send`. This settles the front-desk request without a card. Only the router uses this pass-back. An owner that receives a yielded thread keeps it and never passes it back (Simon, 10-12). Promote it to a card when it promises
   work past the turn, needs a buttoned question, outgrows `quick`, or needs a worker.
 - The general owner decides whether to do carded one-off work itself or dispatch a worker. Configure it for at most
   two live children and six dispatches per deployment-local calendar day. A refused dispatch leaves the card queued;
