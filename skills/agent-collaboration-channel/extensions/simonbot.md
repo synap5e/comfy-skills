@@ -253,6 +253,28 @@ obligations are open, or if the watcher reports the feed stale or disconnected, 
 The reference implementation is `should_alert(participant, event)` in `~/agentic/obl-toolkit`
 (`src/obl_toolkit/routing.py`). Every harness uses that one function, so they can't drift apart.
 
+**General owner and one-off requests (obl OBL-164, decision 0064).** In the owners channel, `simon/general` is the
+router and general owner.
+
+- Classify an unaddressed request in this order: an explicit owner, inbox or routing verb wins; work naming an
+  existing owner's project goes to that owner; an unowned question goes to `simon/general`; a bounded one-off job
+  goes to `simon/general`; a request for ongoing work or a new project becomes a question to the Operator.
+- Cheap, reversible routing guesses are fine because the routing reply names the destination and the Operator can
+  redirect it. Ask first when the request would create a standing agent or project, two owners fit equally and the
+  choice changes scope, it would change a project no owner holds, or a worker launch would exceed its limits.
+- `simon/general` owns questions and bounded jobs which fit no project owner, its one-off cards, its worker children
+  and its scratch directory. It owns no project. It may read other projects but sends changes to their owner. Work
+  that becomes an ongoing project needs the Operator's approval and a new owner.
+- For a quick answer, answer in the original thread and post `obl-post pass-back --thread <ts> --note answered --as
+  simon/general --send`. This settles the front-desk request without a card. Promote it to a card when it promises
+  work past the turn, needs a buttoned question, outgrows `quick`, or needs a worker.
+- The general owner decides whether to do carded one-off work itself or dispatch a worker. Configure it for at most
+  two live children and six dispatches per deployment-local calendar day. A refused dispatch leaves the card queued;
+  explain the limit in the routing thread. A dispatched worker may use subagents in its own session but cannot run
+  `obl dispatch`. The general owner supervises, verifies, reports, closes the worker and returns the result.
+- Do not prescribe a model or harness. The general owner chooses per task through the ordinary handoff defaults and
+  any explicit request override.
+
 ## Reading a card's status
 
 The `Status:` word is authoritative. Older cards have no `Status:` field, so a reader falls back in this order: a
