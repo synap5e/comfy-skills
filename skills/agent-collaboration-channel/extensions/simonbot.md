@@ -254,11 +254,23 @@ In a swarm that runs obl-toolkit, agents message each other with `obl-message`, 
 
 - `obl-message --to coordinator|buddy|<member> [--obl OBL-N] [--subject S-N|OBL-N] "…" --send`. Mail to the
   coordinator is held while it's busy and arrives as one digest, grouped by card; mail to other members goes at once.
+- **Reports go through obl-message, tagged with their card.** Children, buddies and owners report to their
+  coordinator with `obl-message --swarm <parent's config> --to <parent> --obl OBL-N '…' --send`, not bare
+  agent-message. Dispatch, adoption and resume briefs say so.
+- **Coordinator mail waits for a gap** (obl-toolkit 0058). Ordinary mail collects for 90 s, then waits until the
+  coordinator has finished a turn and stayed idle 45 s (waiting on a permission prompt or a quiet tool counts as busy).
+  Mail only about other cards also waits until the coordinator posts on the card it's working on, for at most
+  10 minutes. Click digests wait for idle too (5-minute cap) and travel on their own. Registered Claude coordinators
+  also get agent-message's hold-until-idle guard automatically.
+- If a coordinator hasn't been idle in 2 hours (five or more held items, over half forced out by the cap), obl tells
+  it once to delegate more: hand implementation to a child or a lane, and leave itself time between turns.
 - **From outside the swarm, message the coordinator** (or the buddy). Messaging a worker directly is refused, with
   the command to reach the coordinator; `--direct --reason '…'` overrides it and is recorded.
 - Reply with the `--subject S-N` the digest shows, so the thread stays together. Mark an FYI `--no-reply`, and
-  don't send acknowledgements nobody asked for. `--urgent` skips the wait; a second urgent to the same recipient
-  within 55 min bounces unless you `--confirm`.
+  don't send acknowledgements nobody asked for. `--urgent` skips the waits, and is only for: a person asking or
+  replying while waiting on the agent, a worsening failure (ingest stalled, a child dead, the feed down), a lapsing
+  claim, or a merge or deploy needed now. Progress, completion FYIs and deploy notices are never urgent. A second
+  urgent to the same recipient within 55 min bounces unless you `--confirm`.
 - Every message, and what happened to it, is in the swarm's ledger (`obl messages`, `obl show OBL-N`).
 - Launch a handoff with `obl dispatch OBL-N -- <agent-handoff arguments>`: it posts the dispatched line for you.
 
