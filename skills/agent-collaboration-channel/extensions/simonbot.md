@@ -120,6 +120,15 @@ preference. Before acting on an automatic answer, acknowledge it in the thread (
 alerts that the thread changed before it fired, read it and run `obl auto-answer confirm <key>` or `veto <key>`; no
 reply cancels it. A reopened question is open again: stop work that relied on its automatic answer.
 
+**Answers that defer (obl OBL-139).** When an answer puts off the real answer or promises an action ("later", "ask X",
+"I'll add it"), record who owes the follow-up; wording is never classified automatically. On `obl-post ask`, put
+`--followup answerer` or `--followup asker` right after each deferring `--option`. For a deferral in free text, record
+`obl-post answer OBL-N --ask TS --text '…' --from <their message> --followup answerer|asker --send`. `answerer` means
+that person still owes the real answer or action; `asker` means the asking agent owes the next step. The answer stays
+recorded and the hold becomes a non-blocking `follow-up owed by <who>`: people get one reminder after 2 hours, then it
+shows on their board; agents get their normal alerts. Close it with `obl-post answer OBL-N --ask TS --followup-done
+--from <the answer or the evidence> --send`, or by resolving the card.
+
 ## Claims and alert routing
 
 Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
