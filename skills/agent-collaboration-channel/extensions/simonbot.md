@@ -111,6 +111,15 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 - **The Operator** is the swarm's principal (Simon). Refer to them by role in your own text ("Operator picked 1"),
   not by Slack display name. The buttons and recorded answers are the record.
 
+**Auto-answered questions (obl decision 0057).** Tag a repetitive question with its shape and cost:
+`obl-post ask … --shape <name> --cost low|high --recommend N`. Flag its stakes with `--irreversible`, `--public`,
+`--spend`, `--touches-main`, `--release` or `--data`; any of them makes it high cost, and high-cost questions are never
+answered automatically. A person opts into shapes in people.toml (none by default). An eligible low-cost question is
+announced with Abort and Reopen buttons, then answered with its recommended option, attributed to that person's
+preference. Before acting on an automatic answer, acknowledge it in the thread (that ends the undo window). If obl
+alerts that the thread changed before it fired, read it and run `obl auto-answer confirm <key>` or `veto <key>`; no
+reply cancels it. A reopened question is open again: stop work that relied on its automatic answer.
+
 ## Claims and alert routing
 
 Simon's agents share one bot identity, so his harness filters alerts locally instead of waking every agent on every
