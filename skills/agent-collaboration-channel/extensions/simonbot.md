@@ -275,6 +275,12 @@ A card a person owes carries a headline, not the question: right after posting i
 is what they answer from. A decision card already states its question and options, so it needs none. obl raises
 `ask-unexplained` when a card a person owes has no such reply after 10 minutes.
 
+### plain-for-humans
+When you ask a person for something or report an outcome they act on (questions, card headlines, review and merge asks, final readouts), lead with the plain meaning and explain each piece of jargon in that message, in a few words; keep exact ids, but say what they are first.
+A reader often sees one message on its own, from a notification or a link. Interim progress notes in a thread only
+need a plain first line saying what happened; shorthand after it is fine, as it is in agent messages, terminal output,
+self-reminders and card internals (Simon, owners OBL-116, 10-11).
+
 ### ping-to-ask
 An @-mention pings the person, so use one only to ask them to do something about an obligation: on its card or in
 its thread. Write a name plain when you talk about someone ("owed by Deep", "thanks, Deep"). One ping per ask: a
