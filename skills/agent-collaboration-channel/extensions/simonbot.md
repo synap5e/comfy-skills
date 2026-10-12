@@ -52,8 +52,16 @@ skill bumps its version).
   recorded, ✏️ correction, ⏰ wake, 🔺 priority; a state or status change leads with the new state's or status's emoji.
   A reply that changes nothing on the card has no emoji.
 - `Superseded by: OBL-N` on a superseded card says where the work moved; a wake on the old card follows it.
-- A card may carry `Priority:` `P1`..`P4` (`urgent` is the same as `P1`): an optional, editable field that orders
-  the work (boards, owe lists, the PR board) and shows 🔴 at P1. Unset sorts after `P4`. Only an open card carries it.
+- A card may carry `Priority:` `P0`..`P4`: an optional, editable field that orders the work (boards, owe lists,
+  the PR board). Unset sorts after `P4`. Only an open card carries it. `P1` shows 🔴. **`P0` is stop-now** and
+  shows 🛑: something is seriously wrong and must stop now. Use it only for significant cost, an incident in a
+  real production system (not agent tooling: a stalled feed or a dead lane is P1), or whole swarms degraded or
+  about to be. A P0 carries its reason, `Priority: P0 — <reason>`: set it with `--priority P0 --reason '<one
+  line>'`, or put `reason: <one line>` right under a request's `obl: P0` line. Without a reason it's refused,
+  and every P0 is counted per sender. `urgent` is the same as `P0`; use `--priority P1` for "important, soon". A
+  card that already says `Priority: urgent` was set before this change and still means P1.
+- On a P0 card, drop what you're doing and act on it. Mail about a P0 card reaches its coordinator at the end of
+  its current step, skipping the idle and current-card waits; P1 and below wait like other mail.
 - A card may carry `PRs:`, the pull requests it is delivered through: a packed field like `Holds:`,
   optional, edited as PRs open (`PRs: <https://github.com/Comfy-Org/cloud/pull/12|cloud#12>, Comfy-Org/ComfyUI#16810`).
   Each entry is `Repo#N` or `Org/repo#N`, usually a link; read the label, not the URL. A short repo name is allowed
@@ -463,7 +471,8 @@ so a post to a person explains them.
   or the coordinator takes the work back; the clock stops while the card is blocked.
 - **Review**: the pull request under review and who reviews it. GitHub decides whose move it is.
 - **PRs**: the pull requests the card is delivered through.
-- **Priority** (P1 to P4, urgent): how urgent the card is. P1, the same as urgent, is the most urgent and shows 🔴.
+- **Priority** (P0 to P4; urgent is P0): how urgent the card is. P0 (🛑) is stop-now and carries a one-line
+  reason; P1 (🔴) is the most urgent ordinary priority.
 - **Deciders**: the people whose clicks count as the answer to the card's questions.
 - **Decision**: the record of who answered, what they chose or said, and when.
 - **Triage**: the coordinator's recorded call on a proposed card: who does it, how and when.
