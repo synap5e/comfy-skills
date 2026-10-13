@@ -267,6 +267,9 @@ router and general owner.
 - Classify an unaddressed request in this order: an explicit owner, inbox or routing verb wins; work naming an
   existing owner's project goes to that owner; an unowned question goes to `simon/general`; a bounded one-off job
   goes to `simon/general`; a request for ongoing work or a new project becomes a question to the Operator.
+- An explicit Operator request for a new swarm goes to `simon/general`, which runs `obl swarm new` (a dry run first)
+  and hands the swarm to its new coordinator. A vague one becomes a question to the Operator (Simon, owners OBL-243
+  and OBL-248).
 - Cheap, reversible routing guesses are fine because the routing reply names the destination and the Operator can
   redirect it. Ask first when the request would create a standing agent or project, two owners fit equally and the
   choice changes scope, it would change a project no owner holds, or a worker launch would exceed its limits.
