@@ -388,7 +388,7 @@ In a swarm that runs obl-toolkit, agents message each other with `obl-message`, 
 - **From outside the swarm, message the coordinator** (or the buddy). Messaging a worker directly is refused, with
   the command to reach the coordinator; `--direct --reason '…'` overrides it and is recorded.
 - Reply with the `--subject S-N` the digest shows, so the thread stays together. Mark an FYI `--no-reply`, and
-  don't send acknowledgements nobody asked for. `--urgent` skips the waits, and is only for: a person asking or
+  don't send acknowledgements nobody asked for. `--now` (formerly `--urgent`) skips the waits, and is only for: a person asking or
   replying while waiting on the agent, a worsening failure (ingest stalled, a child dead, the feed down), a lapsing
   claim, or a merge or deploy needed now. Progress, completion FYIs and deploy notices are never urgent. A second
   urgent to the same recipient within 55 min bounces unless you `--confirm`.
@@ -416,7 +416,7 @@ subject with exactly one open question addressed to you infer `--answer`; prefer
 open. Answers are exempt from the ack guard. Reply mail held for a coordinator still counts immediately through the
 claude-hooks answer record.
 
-Questions keep the normal coordinator idle/focus hold and its cap; reserve `--urgent` for a decision needed now,
+Questions keep the normal coordinator idle/focus hold and its cap; reserve `--now` for a decision needed now,
 a worsening failure or a lapsing claim. Claude Stop blocks twice, then releases with a warning. Across harnesses,
 `obl check` reminds after ten minutes of confirmed delivery and alerts the asker once at the deadline. Read outstanding
 questions with `obl questions --mine --open` or `obl questions --to P --open`. An asker can wait longer with
