@@ -613,6 +613,31 @@ Post the paired wake UPDATE and reopen the card before acting.
 A parked item's wake condition is met; waking it in the thread and on the card first lets everyone see it is live
 again before work resumes.
 
+Say what wakes a waiting card in the wake grammar, with a note of what to do then:
+
+```bash
+obl-post update OBL-N --status parked --wake 'merged:OBL-4 OR time:mon -> rebase onto OBL-4' --reply '…' --send
+obl-post update OBL-N --blocked 'merged:OBL-7: needs its parser' --reply '…' --send
+```
+
+Conditions are `key:value`: `time:fri` (also `fri3pm`, `10-16`, `17:00`, `2h`), `closed:OBL-N`, `merged:OBL-N` (the
+merge train landed it, or all its PRs merged), `merged:`/`opened:`/`approved:`/`ci:` on a PR (`ci:` fires when CI
+finishes, green or failed), and `pypi:<package>[>=<version>]`. Join them with `OR` / `AND` and parentheses. Repeat
+`--wake` for separate wakes; each fires once, and within a wake the first OR branch met fires it. Add `OR time:<when>`
+to an event wake so the wait ends even if the event never happens. obl-post refuses what it can't watch and says
+what to write instead; follow it rather than retrying the same text.
+
+Wait on agents with `report:<child>` (its next status line), `idle:<agent>` (its turn ends; Claude Code agents) or
+`dead:<child>`. Park work that waits only for your own time with `--wake free` instead of a queued State: when you
+close a card, go idle or hear from a child, obl offers your top free card. For a condition obl can't test, use
+`check:"<condition>" every:2h until:fri` and answer each tick with `obl-post update OBL-N --check yes|no|drop`.
+
+When a wake fires, the card is ⏰ due until you make one of five moves: start it (`--state working`), ask a blocking
+question (`obl-post ask … --blocking`), close it, wait again with a new wake or blocker, or hand it on (yield,
+dispatch, `--state rehome`). A "Woken:" reply alone doesn't clear it; the alert repeats every 30 minutes and reaches
+the coordinator after 2 hours. Don't leave a card blocked on something nothing watches ("needs an owner"): name a
+card, ask a question, or add a wake.
+
 ### card-pairing
 Every card status edit has a matching reply in its thread; state lives in the Status field.
 Slack sends no event for an edit, so the paired reply is what other loops and people see; the Status field, not the
