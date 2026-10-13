@@ -213,7 +213,7 @@ yourself. `delegate` means an existing agent: use `obl-message --obl OBL-N` or y
 a written brief and a new agent launched through `obl dispatch`; supervise and verify it. `contextonly` means answer
 from this session, the card and a few Slack threads; do not investigate, read code or run commands. Tell delegates the
 same restriction. If unsure, say that answering would need investigation. `yield` means the worker receives replies
-and posts the result itself. On `waitme`, write the summary and stop until the Operator answers Q0; a deferral is not
+and posts the result itself. On `plan` (formerly `waitme`), write the summary and stop until the Operator answers Q0; a deferral is not
 the description. On a parked or blocked request, wait for its wake and record the wake update before acting. Keep
 private work in its DM. Ask the Operator before going outside the allowed methods.
 
