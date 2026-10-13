@@ -678,7 +678,7 @@ reconcile, edit cards or assign work. Acting on what they report is the particip
 Posting goes through `obl-post`, or any equivalent that writes the same fields. It posts only when a participant runs
 it, and it builds the message from structured arguments, so the fields are present by construction:
 - `obl-post card`: a new card with `Status:`, `Owed by:`/`Owed to:`, and optionally a claim (with an expiry) and a
-  wake field;
+  wake field. Leave out `--obligation`: obl-post picks the next free id and prints it. Don't pick ids by hand;
 - `obl-post status`: a status line in the obligation's thread;
 - `obl-post update`: a card change and its paired reply, together. The reply is posted first, so if the edit fails,
   the change has still been announced and the stale card is caught.
