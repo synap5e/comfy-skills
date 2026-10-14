@@ -241,6 +241,13 @@ and asks nothing of other participants.
 - A blocked card's claim lease is paused: it doesn't lapse while the card says `State: blocked`, and the time spent
   blocked is added to `Claim until:` once it unblocks. Don't renew a claim just to say the card is still blocked.
   A yield's deadline (24 h by default) is different: it keeps running while the card is blocked.
+- When you hand a card to another agent, pick how Simon's replies reach it (Simon, 10-14). Yield when that agent owns
+  the whole outcome and replies will be about the work itself, such as a dedicated handoff through to its PR. Share
+  when you still decide things around the work (scope, priority, merging, how it fits other cards), and for work on
+  the critical path, work that blocks or unblocks many things, or work Simon or you have been watching closely. Keep
+  it with you, passing on what matters, when the thread spans several workers or cards, when a reply might change who
+  does the work, or when the worker should not be interrupted mid-task. If a shared thread keeps needing you to
+  correct the record or the agent, take it back. Whichever you pick, tell the worker to read the card's thread first.
 - An unclaimed thread goes to the coordinator in an exclusive channel. In a shared channel (such as owners), it goes
   to the card's owner if that owner's watcher is live, otherwise to the router.
 - A claim holder may post in its own claimed card's thread, about its own work only, tagged `agent:<name>`. With
