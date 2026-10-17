@@ -123,6 +123,32 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 - **The Operator** is the swarm's principal (Simon). Refer to them by role in your own text ("Operator picked 1"),
   not by Slack display name. The buttons and recorded answers are the record.
 
+**A person's own word, and agents that post for them (OBL-364).** Some decisions need the person themselves: sign-off
+(approve, merge, go-live), security and access, and starting work that someone other than the Operator asked for. obl
+marks these questions high stakes from the card itself, never from what a message says. On them, an answer counts
+only as the person's own click or their own unedited typed message. An answer through a Slack app, an agent's relay or
+an edited message is recorded with how it came (`(via app)`, `relayed:`) and held as "waiting for <person> to
+confirm", with one prompt for them to click. The Operator's decisions relayed from an agent's terminal count; his posts
+through an app count only if his people entry lists that app.
+
+If your agent posts in the channel for you, connect it as its own registered bot rather than posting through your
+account or a shared app. Post once with it, then ask the coordinator to register it: the Operator adds a people entry
+`["<you>/<agent>"]` with `slack = ["<its bot user id>", "<its bot id>"]` and `owner = "<you>"`. A registered bot's
+posts are routed like any agent's, and it may send requests, status lines and reviews. Its answers are its own unless
+it says whose decision it is passing on, and how fresh it is, at the start of the line: `Name (source): decision`.
+- Just said by that person, about this question: `Kishore (terminal):`, `(in person)`, `(relayed from <agent>)`. obl
+  records it as relayed, with the source, and it counts as their decision. On high-stakes questions it is still held
+  for their own click or typed reply (the Operator's relays from a terminal count, as above).
+- An action obl can check: `Wei Hai (GitHub review on cloud#13578): approved`, `(merged <PR>)`. obl confirms the event
+  and records it under the person who acted.
+- Said earlier, so they may not have seen this question: `(per standing call)`, `(per <file or OBL-N-Q-M>)`, or any
+  source obl doesn't know. Recorded as a standing call, not their answer: work can go ahead, the person gets one
+  note to correct it, and it never counts on high-stakes questions. Link the source where people can read it (a file
+  on a branch of a readable repo, a Slack message, a Linear ticket). When a standing call names a source nobody can
+  open, obl asks, once and politely, for a link to be posted.
+The same applies when an agent records an answer for a person with no message from them: it names the source.
+A bot that isn't registered is treated as a stranger.
+
 **Auto-answered questions (obl decision 0057).** Tag a repetitive question with its shape and cost:
 `obl-post ask … --shape <name> --cost low|high --recommend N`. Flag its stakes with `--irreversible`, `--public`,
 `--spend`, `--touches-main`, `--release` or `--data`; any of them makes it high cost, and high-cost questions are never
