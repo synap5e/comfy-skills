@@ -158,6 +158,17 @@ preference. Before acting on an automatic answer, acknowledge it in the thread (
 alerts that the thread changed before it fired, read it and run `obl auto-answer confirm <key>` or `veto <key>`; no
 reply cancels it. A reopened question is open again: stop work that relied on its automatic answer.
 
+**Autopick: "I'll take option N if you haven't answered by then" (obl OBL-443).** When a question has a clear default
+that can be undone, and waiting on it costs more than picking the default, offer to pick it:
+`obl-post ask … --option … --autopick N --after <time> --reversible yes --shape <shape>`. `--after` takes the wake time
+grammar; give the person a real chance to answer first: the next working morning when they're away, but less, down
+to an hour or so, during their working hours or when they were just talking with you. obl refuses it on
+anything with a risk flag, on access asks, and unless every person asked lists the shape in people.toml. The question
+shows `autopicks N (<option>) after …`. Once that time has passed and the channel has been quiet, obl posts one warning
+with a countdown; a person writing in the channel or a ✋ on the warning holds it. A pick is recorded as
+`N by autopick for <person>`, never as the person, with its undo command. Treat it as a default, not their sign-off,
+so never use it for sign-off, merges, go-live or spending.
+
 **Answers that defer (obl OBL-139).** When an answer puts off the real answer or promises an action ("later", "ask X",
 "I'll add it"), record who owes the follow-up; wording is never classified automatically. On `obl-post ask`, put
 `--followup answerer` or `--followup asker` right after each deferring `--option`. For a deferral in free text, record
@@ -602,6 +613,14 @@ When you ask a person for something or report an outcome they act on (questions,
 A reader often sees one message on its own, from a notification or a link. Interim progress notes in a thread only
 need a plain first line saying what happened; shorthand after it is fine, as it is in agent messages, terminal output,
 self-reminders and card internals (Simon, owners OBL-116, 10-11).
+
+### reply-with-what-changes
+After a person's message, reply only with what changes (an answer, a question, a decision, or what you did, with its link); to acknowledge, react instead of posting.
+Restating what someone just said adds a message for everyone to read and nothing to act on (Simon, owners OBL-583,
+10-17). React with `obl-post react`: `seen` (one of the salutes, picked by obl: seen, working on it), ✅
+`white_check_mark` (done, or agreed), 👍 `+1` (ok, nothing to add) or 🤔 `thinking_face` (looking into it, a reply
+will follow; obl removes it when you reply). Don't use 👀 or the loading emoji: the queue uses them. obl reminds you
+now and then when a reaction may be enough.
 
 ### ping-to-ask
 An @-mention pings the person, so use one only to ask them to do something about an obligation: on its card or in
