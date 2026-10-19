@@ -698,7 +698,8 @@ card, ask a question, or add a wake.
 ### card-pairing
 Every card status edit has a matching reply in its thread; state lives in the Status field.
 Slack sends no event for an edit, so the paired reply is what other loops and people see; the Status field, not the
-emoji or the wording, is what tools read.
+emoji or the wording, is what tools read. An edit with nothing for a person to read (a claim renewal, a mute, an edit
+note) may be paired by a reaction on the card instead (Simon, owners OBL-279, 10-19).
 
 ### read-whole-thread
 Read the card's whole thread before acting on the holder's report.
