@@ -677,7 +677,9 @@ obl-post update OBL-N --blocked 'merged:OBL-7: needs its parser' --reply '…' -
 
 Conditions are `key:value`: `time:fri` (also `fri3pm`, `10-16`, `17:00`, `2h`), `closed:OBL-N`, `merged:OBL-N` (the
 merge train landed it, or all its PRs merged), `merged:`/`opened:`/`approved:`/`ci:` on a PR (`ci:` fires when CI
-finishes, green or failed), and `pypi:<package>[>=<version>]`. Join them with `OR` / `AND` and parentheses. Repeat
+finishes, green or failed), `pypi:<package>[>=<version>]`, and `quiet:<span>` (Simon has posted nothing anywhere for
+that long, 5m to 7d; `quiet:<span>@<agent>` waits for that agent to be idle as long; it can't end a wait by itself, so
+pair it with `OR time:<when>`). Join them with `OR` / `AND` and parentheses. Repeat
 `--wake` for separate wakes; each fires once, and within a wake the first OR branch met fires it. Add `OR time:<when>`
 to an event wake so the wait ends even if the event never happens. obl-post refuses what it can't watch and says
 what to write instead; follow it rather than retrying the same text.
