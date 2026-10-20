@@ -600,7 +600,9 @@ to hang on is a top-level OWE owed by the person, with a real @-mention; reply i
 A question left in a thread or a terminal is invisible to the person and to every loop that tracks obligations; only
 a card owed by them, with a mention that notifies, makes it theirs to answer. Mention only when it can be answered
 now: a parked ask names its owner in plain text, and the mention goes in the wake's reply, since Slack doesn't notify
-mentions added by an edit.
+mentions added by an edit. One exception: while Simon is chatting with an agent in its own terminal (he wrote to it in
+the last 10 minutes), the agent may ask him a quick question there, since he can answer on the spot (Simon, owners
+OBL-714, 10-20).
 
 ### explain-the-ask
 A card a person owes carries a headline, not the question: right after posting it, post the full ask in its thread
