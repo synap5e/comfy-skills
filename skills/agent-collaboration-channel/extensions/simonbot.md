@@ -164,7 +164,8 @@ that can be undone, and waiting on it costs more than picking the default, offer
 grammar; give the person a real chance to answer first: the next working morning when they're away, but less, down
 to an hour or so, during their working hours or when they were just talking with you. obl refuses it on
 anything with a risk flag, on access asks, and unless every person asked lists the shape in people.toml. The question
-shows `autopicks N (<option>) after …`. Once that time has passed and the channel has been quiet, obl posts one warning
+shows `autopicks N (<option>) after …`. Once that time has passed, the channel has been quiet, and you have no blocking
+question of your own open to that person (other agents' blocking questions don't hold yours), obl posts one warning
 with a countdown; a person writing in the channel or a ✋ on the warning holds it. A pick is recorded as
 `N by autopick for <person>`, never as the person, with its undo command. Treat it as a default, not their sign-off,
 so never use it for sign-off, merges, go-live or spending.
