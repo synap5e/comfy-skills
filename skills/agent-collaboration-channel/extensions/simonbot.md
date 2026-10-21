@@ -115,6 +115,12 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 - **Merging is a question too.** When the review is approved, obl prompts `obl-post merge-ask OBL-N`, which asks the
   Operator: merge if green · update the branch from main, then merge when green · hold. The author carries out the
   choice; obl never merges. The question is withdrawn automatically when it no longer applies.
+- **Your swarm's PR gates are yours to set.** `obl pr check` passes a PR against gates (deciders, size, comment-gate,
+  deep review, design pass and growth, bots, QA, decisions, threads, demo, …) that obl-toolkit sets per repo for every
+  swarm. The coordinator can override them in `pr-gates.toml` beside the swarm's `config.toml`: `[defaults]` for all
+  its repos, `[repos."OWNER/REPO"]` for one, the same keys as the host file. `obl pr gates OWNER/REPO` shows the gates
+  in force and where each came from; a gate set below the host's is noted on its `obl pr check` row, not refused. One
+  PR's exception is its decider's `obl pr ok …` instead (Simon, owners OBL-704, 10-21).
 - **Blocked names its blocker**: `--blocked '<short reason>'`. Name the card it waits on (`OBL-12`) to be woken when
   that card closes. Name a person only if they really are next; that puts the card on them, and it then needs a
   question. `Waiting on:` is the old form of `Blocked:`: read it the same way, but don't write it.
