@@ -701,7 +701,8 @@ close a card, go idle or hear from a child, obl offers your top free card. For a
 When a card waits on something that ends by itself (a build, a GPU batch, a cmdwatch job, a process), register it as
 a task: `obl task add OBL-N cmd <cmdwatch job>`, `pid <pid>`, `run <Org/repo>/<run id>` or `files '<glob>' --of N`
 (`obl task --help`). obl then posts the card's task list with ETAs in its thread and alerts when a task stalls or
-fails. CI on a card's PRs is added by itself (Simon, owners OBL-240, 10-23).
+fails. CI on a card's PRs is added by itself, and so is a cmdwatch job you start while you have exactly one working
+card; with several, add it yourself (Simon, owners OBL-240, 10-23).
 
 When a wake fires, the card is ⏰ due until you make one of five moves: start it (`--state working`), ask a blocking
 question (`obl-post ask … --blocking`), close it, wait again with a new wake or blocker, or hand it on (yield,
