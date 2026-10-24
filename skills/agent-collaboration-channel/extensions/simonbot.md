@@ -612,10 +612,12 @@ the last 10 minutes), the agent may ask him a quick question there, since he can
 OBL-714, 10-20).
 
 ### explain-the-ask
-A card a person owes carries a headline, not the question: right after posting it, post the full ask in its thread
-(the context, exactly what you need from them, and by when). The headline is what the person scans; the thread reply
-is what they answer from. A decision card already states its question and options, so it needs none. obl raises
-`ask-unexplained` when a card a person owes has no such reply after 10 minutes.
+A card a person owes carries a headline, not the question: post the full ask in its thread (the context, exactly what you need from them, and by when), with the question last.
+The headline is what the person scans; the thread is what they answer from. For an item ask, pass the details to
+`obl-post ask --context` (or `--context-file`), which posts them just before the question, so the question is what the
+person reads last and answers from. A decision card already states its question and options, so it needs none. obl
+raises `ask-unexplained` when a card a person owes has no such reply after 10 minutes, and obl-post warns when a long
+post follows your own question (`details-after-ask`) (Simon, owners OBL-893, 10-24).
 
 ### plain-for-humans
 When you ask a person for something or report an outcome they act on (questions, card headlines, review and merge asks, final readouts), lead with the plain meaning and explain each piece of jargon in that message, in a few words; keep exact ids, but say what they are first.
