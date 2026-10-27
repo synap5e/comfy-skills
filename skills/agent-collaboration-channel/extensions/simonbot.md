@@ -697,15 +697,19 @@ what to write instead; follow it rather than retrying the same text.
 
 Wait on agents with `report:<child>` (its next status line), `idle:<agent>` (its turn ends; Claude Code agents) or
 `dead:<child>`. Park work that waits only for your own time with `--wake free` instead of a queued State: when you
-close a card, go idle or hear from a child, obl offers your top free card. For a condition obl can't test, use
-`check:"<condition>" every:2h until:fri` and answer each tick with `obl-post update OBL-N --check yes|no|drop`.
+close a card, go idle or hear from a child, obl offers your top free card. For a condition a script can test, add a
+probe (below) instead of checking it yourself. For one that needs a person's judgement, ask them (`obl-post ask`).
+`check:` wakes are retired: obl-post refuses a new one. A check a card already holds still ticks until it fires or
+expires: answer each tick with `obl-post update OBL-N --check yes|no|drop`.
 
 When a card waits on something that ends by itself (a build, a GPU batch, a cmdwatch job, a process), register it as
 a task: `obl task add OBL-N cmd <cmdwatch job>`, `pid <pid>`, `run <Org/repo>/<run id>` or `files '<glob>' --of N`
-(`obl task --help`). obl then posts the card's task list with ETAs in its thread and alerts when a task stalls or
-fails. CI on a card's PRs is added by itself, and so is a cmdwatch job you start while you have exactly one working
-card; with several, add it yourself. To wake a parked card when its tasks end, park it with `--wake tasks:OBL-N`
-(Simon, owners OBL-240, 10-23).
+(`obl task --help`). For a state a script can test (a deploy is live, a page updated), add a probe:
+`obl task add OBL-N probe '<command>' --every 2m`. obl runs the command on a budget; exit 0 means yes and ends the
+task, exit 1 means not yet. obl then posts the card's task list with ETAs in its thread and alerts when a task
+stalls or fails. CI on a card's PRs is added by itself, and so is a cmdwatch job you start while you have exactly one
+working card; with several, add it yourself. To wake a parked card when its tasks end, park it with
+`--wake tasks:OBL-N` (Simon, owners OBL-240, 10-23 and 10-27).
 
 When a wake fires, the card is ⏰ due until you make one of five moves: start it (`--state working`), ask a blocking
 question (`obl-post ask … --blocking`), close it, wait again with a new wake or blocker, or hand it on (yield,
