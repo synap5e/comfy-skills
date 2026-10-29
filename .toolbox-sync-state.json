@@ -10,7 +10,7 @@
     "path": "skills/agent-browser"
   },
   "agent-collaboration-channel": {
-    "hash": "112a135186d927659775d0bf7635fec7afc552a9c981a226abb87ea6b0914148",
+    "hash": "fcb98400dd0f4bc55be310ea4b54b9b9e3018f7fddaa5545c1f47ec7a017f41a",
     "listing_url": "/t/agent-collaboration-channel",
     "path": "skills/agent-collaboration-channel"
   },
@@ -372,6 +372,11 @@
     "hash": "d439ded6394f679a2ecaa4f2e09d66953da8694cf19cb3eb90de04dc9d1710fd",
     "listing_url": "/t/signal-ingest",
     "path": "skills/post-release/signal-ingest"
+  },
+  "signal-reporting": {
+    "hash": "6a73232a6dc2952f377a109a882d95458cb52210be174b020f6d7ef49a1f5db8",
+    "listing_url": "/t/signal-reporting",
+    "path": "skills/signal-reporting"
   },
   "signal-translation": {
     "hash": "bf309e88aaca1926a1e9ee69bf1d52ff686980fd622fae83793db73e92440abc",

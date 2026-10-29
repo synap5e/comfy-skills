@@ -51,6 +51,16 @@ The body is natural language. Include only the fields that help the receiver act
 - `x-<owner>-<name>:` optional namespaced metadata for one participant's harness. Other participants
   ignore unknown extensions. An extension never replaces required prose or shared fields.
 
+The first sentence is for people: give the answer, current risk, or decision in ordinary language.
+Do not lead with internal state labels, exhaustive check output, or an evidence request larger than
+the decision requires. A person should be able to answer a bounded question tersely because its
+context and options already make the consequence clear.
+
+Put the human-readable body first when the transport can also preserve the compact envelope as
+machine-readable context. Keep a plain-text fallback that validates as v0 until the receiving peer
+has confirmed support. Capability state is per peer and reversible; a stale capability record must
+degrade to the readable fallback rather than drop or reinterpret the message.
+
 ## Message Types
 
 | Type        | Use                                                               |
@@ -77,8 +87,13 @@ The body is natural language. Include only the fields that help the receiver act
   `<@BOT_ID>:agent-reviewer`.
 - Treat an unmentioned top-level post as informational unless it updates an existing claim or
   obligation owned by the participant. Agents may still batch-read informational traffic.
+- The charter roster is a routing source. When a known collaborator asks for in-scope work, respond
+  or route to that collaborator directly; do not ask the nominal channel owner to re-authorize ordinary
+  collaboration. Still obtain separate authority for external mutations, secrets, spending, or scope
+  expansion.
 - Honor the charter's explicit ignore signal, such as `:no-bots:`. Filtering beyond that is a local
-  harness choice, not a shared protocol rule.
+  harness choice, not a shared protocol rule. Put an inline marker on the original message when an
+  event consumer must ignore it; a later reaction or edit may arrive after the consumer has acted.
 - Use Slack's message timestamp or Events API `event_id` as the delivery deduplication key.
 - Process retries idempotently. Never infer that a repeated delivery is a new request.
 - Distinguish an informational update with `No action needed:` from a request that creates an
@@ -107,6 +122,10 @@ do not automatically merge both developers' knowledge bases. Put persistent dash
 tables, long reports, and media in a durable linked artifact and keep Slack to a compact current
 headline plus the human ask.
 
+At high volume, prefer a changed-state digest grouped by actor and urgency over one post per internal
+transition. Update a mutable current-state card and preserve append-only evidence in its thread.
+Protocol-valid output can still be operationally noisy; validation is a floor, not a reason to post.
+
 ## Obligations and Reconciliation
 
 Use `OWE` in the shared channel when a cross-developer requested or promised action must survive the
@@ -118,8 +137,20 @@ Use `RECONCILE` only after rereading that entry and verifying the result. Link t
 successor obligation. See [the ledger format](obligation-ledger.md).
 
 Corrections are first-class state changes. Reply in the originating thread, identify the inaccurate
-claim, and reconcile or supersede any affected obligation. Never silently edit history into appearing
-correct.
+claim, and reconcile or supersede any affected obligation. Explicitly withdraw stale QA findings and
+retire superseded asks. Never silently edit history into appearing correct.
+
+## Authority and Verdict Provenance
+
+An agent saying that a human approved something does not itself grant that approval. Treat it as a
+recommendation until the named human confirms it or a durable record shows explicit per-case or scoped
+standing delegation. Delegation applies only to its recorded subject, action class, venue, and expiry
+or revocation condition.
+
+A QA or review verdict identifies the artifact, exact revision, base or integration state, and checks
+completed. A changed head, base, integration result, or unfinished check invalidates the old verdict;
+publish a correction instead of letting a completed-looking message remain authoritative. Splitting,
+retargeting, or closing work does not silently transfer review scope or ownership to successor artifacts.
 
 ## Protocol Evolution
 
