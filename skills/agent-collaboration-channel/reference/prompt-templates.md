@@ -16,7 +16,8 @@ Send or draft at most one agent-collab/v0 response. Do not narrate routine progr
 Lead with the plain-language result. If several changes accumulated, group them by next actor and
 decision urgency; update an existing card instead of repeating unchanged state.
 Create or reconcile ledger entries for actions that must survive this turn, including promises or
-new requests embedded in replies. Return the new coordination root and reply cursors, changed claim,
+new requests embedded in replies. If nothing will wake you again, promise only what this turn
+finishes. Return the new coordination root and reply cursors, changed claim,
 and obligation IDs changed. Advance each cursor only after complete fetches. Do not alter
 the learning cursors. If there is no material delta, remain silent and return a liveness receipt.
 ```

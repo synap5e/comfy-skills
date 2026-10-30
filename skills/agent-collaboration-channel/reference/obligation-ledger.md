@@ -27,12 +27,14 @@ measure of coverage; duplicate cards make ownership less clear and rediscover se
 ```
 
 Use a stable ID. `Owed by` is the next actor; `Owed to` is who needs the result. The actor may be a
-human, agent, or peer participant. Put enough context in the entry that rereading it restores why the
-request exists, but link to evidence rather than copying a transcript.
+human, agent, or peer participant. Name both as `Owed by:` and `Owed to:` in any message that creates
+an obligation, even with no ledger behind it. Put enough context in the entry that rereading it
+restores why the request exists, but link to evidence rather than copying a transcript.
 
 Valid statuses are `open`, `parked`, `reconciled`, and `superseded`. A parked entry names a plain-text
 wake condition or date, a watcher responsible for noticing it, and is not treated as an active human
 ask before that trigger. When it wakes, send an explicit `UPDATE`; do not silently flip its status.
+Pair every status change with a reply in the thread that says why; an edit alone notifies nobody.
 Reconciliation records the result, evidence, timestamp, and any successor obligation. A reply, merge,
 or passing check is not enough by itself: update the ledger so the old request cannot be rediscovered
 as pending.
@@ -58,7 +60,8 @@ mentioned in the channel must map to an obligation or an explicit out-of-scope d
 obligation is a useful view, not a protocol requirement. A top-level obligation should represent a
 cross-party coordination edge; private single-owner details may stay in the ledger and compact index.
 
-Natural-language promises inside threads still count. Promote “update me in 25 minutes,” a newly
+Natural-language promises inside threads still count. Close out "checking now" in the same thread
+when you finish. Promote “update me in 25 minutes,” a newly
 requested review, or a nested approval into the current obligation or a stable child obligation. A
 standing obligation needs a cancellation condition; a time-bound one needs a checkpoint an auditor
 can detect. Human approval or risk acceptance names the human as the next actor rather than replacing
@@ -79,12 +82,30 @@ An optional auditor loop may compare new Slack messages, recent agent output, an
 flag a likely missing or stale entry. It may propose updates, but it must not invent a reconciliation
 or silently assign a human.
 
+## Claim Heartbeat
+
+Post progress with a new `Claim until:` before a claim expires, or the claim lapses and
+[may be reclaimed](protocol.md#claims-and-conflicts). This is a checkpoint, not a routine heartbeat.
+When blocked, pause the claim with a `BLOCKED` reply naming what it waits on; a paused claim does not
+lapse.
+
+## Without a Ledger
+
+A charter may name no ledger, and some agents cannot schedule a follow-up. The rule for them: if you
+can't act later, don't promise; keep claims short and let them lapse.
+
+- If you can't track a deferral, say so instead of deferring.
+- Keep a claim short enough to finish in this turn, and let it lapse rather than renewing it.
+- If you can't come back, don't say "checking now"; check first and post the result.
+- With no tracked item, the reply is the status record.
+
 ## Good Boundaries
 
 - “FYI, no action needed” is an `UPDATE`, not an obligation.
 - A question needed to proceed creates an obligation on the named respondent.
 - A monitoring promise creates an obligation on the monitor until its stop condition or next report.
 - A correction reconciles or supersedes the inaccurate entry and links its replacement.
-- A deferred finding needs an owner and durable follow-up; “later” alone is not reconciled.
+- Deferring something ("later", "after X") creates a follow-up you owe. A deferred finding needs an
+  owner and durable follow-up; “later” alone is not reconciled.
 - Evidence expectations are negotiable. If an authorized human says screenshots are unnecessary,
   record the accepted verification result rather than manufacturing proof.

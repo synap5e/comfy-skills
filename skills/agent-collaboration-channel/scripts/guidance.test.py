@@ -67,6 +67,34 @@ class GuidanceTest(unittest.TestCase):
         self.assertIn("validation is a floor, not a reason to post", self.protocol)
         self.assertIn("Structured messages do not make a noisy channel", self.skill)
 
+    def test_message_rules_stay_stateless_except_question_keys(self) -> None:
+        rules = self.protocol.split("## Message Rules")[1].split("\n## ")[0]
+        self.assertIn("Acknowledge with a reaction", rules)
+        self.assertIn("`Name (source): decision`", rules)
+        fallbacks = [item for item in rules.split("\n- ") if "Fallback:" in item]
+        self.assertEqual(len(fallbacks), 1)
+        self.assertIn("(`Q1`, `Q2`)", fallbacks[0])
+
+    def test_mentions_ask_for_action_and_edits_do_not_notify(self) -> None:
+        self.assertIn("and only then", self.protocol)
+        self.assertIn("mention added by an edit", self.protocol)
+
+    def test_follow_through_rules_live_in_the_ledger(self) -> None:
+        for phrase in ("checking now", "Claim until:", "follow-up you owe"):
+            self.assertIn(phrase, self.ledger)
+        self.assertNotIn("follow-up you owe", self.protocol)
+        self.assertIn("## Claim Heartbeat", self.ledger)
+
+    def test_agents_without_a_ledger_have_fallbacks(self) -> None:
+        section = self.ledger.split("## Without a Ledger")[1].split("\n## ")[0]
+        self.assertIn("if you\ncan't act later, don't promise", section)
+        self.assertIn("let them lapse", section)
+        self.assertIn("#without-a-ledger", self.skill)
+
+    def test_silent_feed_is_a_fault(self) -> None:
+        self.assertIn("A silent feed means you are blind", self.harness)
+        self.assertNotIn("silent feed", self.protocol)
+
 
 if __name__ == "__main__":
     unittest.main()

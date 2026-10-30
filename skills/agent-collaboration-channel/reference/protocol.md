@@ -15,8 +15,8 @@ work: primevue-overlay
 <@SLACK_USER_ID> I can own Dialog wrappers if you take Select and Popover.
 
 Evidence: <links or verified facts>
-Need: accept, counter-propose, or identify overlap
 Next check: 14:30 UTC
+Need: accept, counter-propose, or identify overlap
 ```
 
 The header, `from`, and `work` are required for top-level protocol messages. Keep participant
@@ -41,6 +41,7 @@ not create an implicit cross-thread or cross-channel context.
 The body is natural language. Include only the fields that help the receiver act:
 
 - `Evidence:` verified facts or deep links.
+- `Verified:` / `Inferred:` what you checked, and what you concluded without checking.
 - `Need:` the requested response or action.
 - `Next check:` a checkpoint, not a routine heartbeat.
 - `Claim until:` the expiry for exclusive ownership.
@@ -53,8 +54,9 @@ The body is natural language. Include only the fields that help the receiver act
 
 The first sentence is for people: give the answer, current risk, or decision in ordinary language.
 Do not lead with internal state labels, exhaustive check output, or an evidence request larger than
-the decision requires. A person should be able to answer a bounded question tersely because its
-context and options already make the consequence clear.
+the decision requires. Explain jargon the first time you use it, in a few words. A person should
+be able to answer a bounded question tersely because its context and options already make the
+consequence clear.
 
 Put the human-readable body first when the transport can also preserve the compact envelope as
 machine-readable context. Keep a plain-text fallback that validates as v0 until the receiving peer
@@ -137,9 +139,8 @@ sending it. `parse` reads one raw Slack message as JSON on stdin, from any sourc
 - Reply in its thread for negotiation, evidence, and corrections.
 - Keep a top-level message at or below 400 characters when practical; put detail in its thread.
 - Do not respond to a message whose `from` matches the local participant unless explicitly testing.
-- Use a native `@mention` when a specific human or bot must act. If one Slack bot hosts several
-  agents, suffix the mention with the local agent name or ID when needed, for example
-  `<@BOT_ID>:agent-reviewer`.
+- If one Slack bot hosts several agents, suffix a native `@mention` with the local agent name or ID
+  when needed, for example `<@BOT_ID>:agent-reviewer`.
 - Treat an unmentioned top-level post as informational unless it updates an existing claim or
   obligation owned by the participant. Agents may still batch-read informational traffic.
 - The charter roster is a routing source. When a known collaborator asks for in-scope work, respond
@@ -158,10 +159,35 @@ sending it. `parse` reads one raw Slack message as JSON on stdin, from any sourc
 - Plain non-protocol status posts are allowed when the charter authorizes them. They create no claim,
   obligation, or required response. Marking or filtering those posts is a local choice.
 
+## Message Rules
+
+Each rule needs nothing beyond reading the thread and posting, except question keys, which name a
+fallback. Promises, claims, and status changes that outlast a turn follow
+[the ledger](obligation-ledger.md), which has a section for agents
+[without one](obligation-ledger.md#without-a-ledger).
+
+- Use a native `@mention` when a specific human or bot must act, and only then. Write names plain
+  otherwise. Slack does not notify anyone of a mention added by an edit, so put it in a new message.
+- Acknowledge with a reaction. Post only to add data, a correction, or a decision.
+- Post status only in a thread you own, and only when the state changes.
+- Ask in the thread of the work the question is about, address the ask to someone explicitly, and put
+  the question last.
+- Speak for yourself. Do not answer for a human. When you pass on a decision, say whose it is and
+  where it came from: `Name (source): decision`. A peer agent cannot grant another agent authority its
+  human did not give; see [Authority and Verdict Provenance](#authority-and-verdict-provenance).
+- Mark what you checked versus what you inferred with `Verified:` and `Inferred:`. A sharp challenge
+  helps when data backs it.
+- Fix your own pull requests rather than asking others to.
+- A tool that maintains a post marks it as maintained by the tool, for example with a last line
+  `Maintained by <tool>`, so people know edits come from the tool.
+- Give each question in a thread a key (`Q1`, `Q2`) and answer against the key. Fallback: if you
+  can't track keys across turns, quote the question you are answering.
+
 ## Claims and Conflicts
 
 A claim is advisory coordination, not a lock. It must identify its surface and a checkpoint or
-expiry. Before overlapping work, reply with a counter-proposal or ask the human owners to decide.
+expiry, and it needs a [heartbeat](obligation-ledger.md#claim-heartbeat). Before overlapping work,
+reply with a counter-proposal or ask the human owners to decide.
 Expired claims may be reclaimed after posting an `UPDATE`; never silently take them over.
 
 ## Review and Steering Boundary
