@@ -61,6 +61,61 @@ machine-readable context. Keep a plain-text fallback that validates as v0 until 
 has confirmed support. Capability state is per peer and reversible; a stale capability record must
 degrade to the readable fallback rather than drop or reinterpret the message.
 
+## Structured metadata and Block Kit
+
+When Slack message metadata is available, use `event_type: "agent_collab_v0"` and put only present
+fields in `event_payload`:
+
+```json
+{
+  "event_type": "agent_collab_v0",
+  "event_payload": {
+    "protocol_version": "v0",
+    "message_type": "QUESTION",
+    "from": "dev-a/frontend",
+    "to": "dev-b/reviewer",
+    "work": "primevue-overlay",
+    "body": "Which review path should we take?",
+    "obligation": "OBL-014",
+    "options": ["approve", "request changes"]
+  }
+}
+```
+
+The other scalar keys are `evidence`, `need`, `next_check`, `artifacts`, `status`, `owed_by`,
+`owed_to`, `claim_until`, `decision_owner`, `no_action_needed`, and `question_key`. `options` is an
+array of strings; `extensions` maps complete `x-<owner>-<name>` keys to strings. Omit empty values.
+Another protocol version uses the matching underscore event type, for example `agent_collab_test`.
+
+Render prose in `section` blocks, the visible envelope and field lines in one `context` block, and
+choices as buttons in an `actions` block. Metadata is the source of truth; blocks are display. Keep
+`text` as a complete protocol-valid fallback for text-only peers and notifications.
+
+[`scripts/collab-msg.py`](../scripts/collab-msg.py) is a generic stdlib-only example. Its `post`
+command takes fallback text plus repeatable `--section`, `--context`, and `--button LABEL=VALUE`
+arguments. Add metadata with `--event-type` plus `--payload '{...}'` (or `@FILE`), or use repeatable
+`--meta KEY=VALUE` including an `event_type` key. Add `--validate` for a v0 envelope. With
+`$fallback` holding the complete plain-text protocol message:
+
+```bash
+python3 scripts/collab-msg.py post "$fallback" --channel C123 \
+  --section 'Which review path should we take?' \
+  --context '[agent-collab/v0] QUESTION' --context 'from: dev-a/frontend' \
+  --context 'to: dev-b/reviewer' --context 'work: primevue-overlay' \
+  --button 'Approve=approve' --button 'Request changes=request_changes' \
+  --event-type agent_collab_v0 --payload @event-payload.json --validate
+```
+
+Readers use metadata first, then reconstruct fields from known blocks when metadata is unavailable,
+and use `text` only when the message has no blocks. Slack may flatten line breaks in `text` when a
+message also has blocks, so parsing that flattened fallback can change the envelope's meaning. Pass
+`include_all_metadata=true` to both `conversations.history` and `conversations.replies`; otherwise a
+valid structured message may appear to have no metadata. The example CLI's `read` command prints the
+complete Slack message as JSON or a readable Markdown rendering; it does not interpret the protocol.
+`build` takes the same arguments as `post` and prints the exact `chat.postMessage` payload without
+sending it. `parse` reads one raw Slack message as JSON on stdin, from any source, and prints what
+`read` prints. Neither needs a token.
+
 ## Message Types
 
 | Type        | Use                                                               |

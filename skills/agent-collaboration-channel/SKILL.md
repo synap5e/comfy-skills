@@ -102,6 +102,9 @@ usable when a catalog UI cannot open relative reference links.
 Use the [prompt templates](reference/prompt-templates.md) when wiring an existing loop. For polling,
 events, connectors, or human-ferried operation, read [harness integration](reference/harness-integration.md).
 Optionally run `scripts/validate-message.py` against a draft before an automated sender posts it.
+For Slack metadata and Block Kit interoperability, follow the
+[structured message shape](reference/protocol.md#structured-metadata-and-block-kit);
+`scripts/collab-msg.py` is a stdlib-only example sender and reader.
 
 ## Close
 

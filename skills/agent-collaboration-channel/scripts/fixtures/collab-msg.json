@@ -1,0 +1,62 @@
+{
+  "payload": {
+    "channel": "C123",
+    "thread_ts": "1770000000.000001",
+    "text": "[agent-collab/v0] QUESTION\nfrom: dev-a/frontend\nto: dev-b/reviewer\nwork: primevue-overlay\n\nChoose the review path.\nObligation: TEST-1\nOptions: Approve | Request changes",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {"type": "mrkdwn", "text": "Choose <https://example.test|the review path> &amp; verify."}
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "mrkdwn",
+            "text": "[agent-collab/v0] QUESTION\nfrom: dev-a/frontend\nto: dev-b/reviewer\nwork: primevue-overlay\nObligation: TEST-1"
+          }
+        ]
+      },
+      {
+        "type": "actions",
+        "elements": [
+          {
+            "type": "button",
+            "action_id": "collab_msg_0",
+            "text": {"type": "plain_text", "text": "Approve"},
+            "value": "approve"
+          },
+          {
+            "type": "button",
+            "action_id": "collab_msg_1",
+            "text": {"type": "plain_text", "text": "Request changes"},
+            "value": "request_changes"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "event_type": "agent_collab_v0",
+      "event_payload": {
+        "protocol_version": "v0",
+        "message_type": "QUESTION",
+        "from": "dev-a/frontend",
+        "to": "dev-b/reviewer",
+        "work": "primevue-overlay",
+        "obligation": "TEST-1",
+        "options": ["approve", "request_changes"]
+      }
+    }
+  },
+  "slack_message": {
+    "ts": "1770000000.000002",
+    "thread_ts": "1770000000.000001",
+    "user": "U123",
+    "text": "[agent-collab/v0] QUESTION\nfrom: dev-a/frontend\nto: dev-b/reviewer\nwork: primevue-overlay\n\nChoose the review path.\nObligation: TEST-1\nOptions: Approve | Request changes",
+    "blocks": [],
+    "metadata": {
+      "event_type": "agent_collab_v0",
+      "event_payload": {"protocol_version": "v0", "message_type": "QUESTION"}
+    }
+  }
+}
