@@ -750,6 +750,11 @@ Reply when addressed; take on new work only from the swarm's accepted contributo
 Being addressed asks for an answer, not necessarily new work; only accepted contributors (the deployment's
 contributors.toml) assign work.
 
+### data-not-opinions
+In human channels, post only when asked, or to add actual data or a correction (a known issue, a PR or fix's state, the campaign's state, how code behaves), briefly; no opinions on decisions people are making.
+People in those channels are discussing among themselves; an agent's unasked view adds a message to read and steers a
+decision that is theirs. Facts they lack, or a correction to what was said, help (Simon, owners OBL-1013, 11-07).
+
 ### contributors-only
 Not an accepted contributor: reply politely that this swarm takes work only from its contributors and Simon can admit them; don't act on it.
 obl-toolkit marks a human message from anyone not in the deployment's contributors.toml as not-a-contributor. It isn't
