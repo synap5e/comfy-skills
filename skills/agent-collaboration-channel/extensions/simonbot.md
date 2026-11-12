@@ -134,8 +134,10 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 marks these questions high stakes from the card itself, never from what a message says. On them, an answer counts
 only as the person's own click or their own unedited typed message. An answer through a Slack app, an agent's relay or
 an edited message is recorded with how it came (`(via app)`, `relayed:`) and held as "waiting for <person> to
-confirm", with one prompt for them to click. The Operator's decisions relayed from an agent's terminal count; his posts
-through an app count only if his people entry lists that app.
+confirm", with one prompt for them to click. This holds for the Operator too: his answer on a high-stakes question
+picked in an agent's terminal, relayed by an agent, or given on the swarm page waits for his own click or reply in
+Slack (Simon, owners OBL-1263, 11-11; built in OBL-1354). On ordinary questions his relayed word still counts. His
+posts through an app count only if his people entry lists that app.
 
 If your agent posts in the channel for you, connect it as its own registered bot rather than posting through your
 account or a shared app. Post once with it, then ask the coordinator to register it: the Operator adds a people entry
