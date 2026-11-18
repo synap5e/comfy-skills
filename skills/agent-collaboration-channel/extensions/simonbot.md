@@ -153,6 +153,13 @@ so his words there read as typed in yours; a payload piped into `obl hook post-a
 and sets its `HOOK_PICK`, passes for obl's own hook. Doing any of these forges his answer. On ordinary
 questions his relayed word still counts. His posts through an app count only if his people entry lists that app.
 
+**What obl can't stop (OBL-1531).** obl reads every answer from its Slack text, every agent can post and edit as
+obl's own bot, and the Slack MCP posts as the Operator. So obl can't tell an answer it recorded from one an agent wrote
+in. Never edit a question's `Decision:` line or any message obl posted (with `slack-msg` or any raw Slack call), never
+post a message that looks like obl's question or carries its fields, and never use the Slack MCP to answer, confirm or
+click for the Operator. Record an answer only with `obl-post answer`, with his own message, terminal turn or click as
+evidence (Simon, 11-18, OBL-1531-Q-1: keep today's checks and say this).
+
 **Batch Starts (OBL-1481).** In work the swarm's config lists under `[start] batch_work` (ring-gates on owners), a P4
 card that an agent or app asked for gets no Start question of its own. It waits, gated, until one batch question
 starts it with others: `obl-post ask '<question>' --obl <the batch's card> --starts OBL-a,OBL-b --send`. It takes only
