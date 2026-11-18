@@ -134,10 +134,19 @@ that, and the board shows each ask as Card · Do · Where · Waiting.
 marks these questions high stakes from the card itself, never from what a message says. On them, an answer counts
 only as the person's own click or their own unedited typed message. An answer through a Slack app, an agent's relay or
 an edited message is recorded with how it came (`(via app)`, `relayed:`) and held as "waiting for <person> to
-confirm", with one prompt for them to click. This holds for the Operator too: his answer on a high-stakes question
-picked in an agent's terminal, relayed by an agent, or given on the swarm page waits for his own click or reply in
-Slack (Simon, owners OBL-1263, 11-11; built in OBL-1354). On ordinary questions his relayed word still counts. His
-posts through an app count only if his people entry lists that app.
+confirm", with one prompt for them to click. This holds for the Operator too, with one exception: his answer typed
+or picked in an agent's own terminal counts as his once obl checks it there (Simon, 11-18: "terminal > slack"; owners
+OBL-1452). Record it with `obl-post answer --from terminal --note '<where>' --quote '<his exact words>'`. obl looks
+for his words, typed after the question was posted, in your own session's transcript (a Claude Code session you
+registered with `obl watch-session`). They must name the choice: its option number or label and nothing else, or a
+bare yes on a two-option question in his turn right after yours showed the question's key. One turn answers one
+question. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
+or reply in Slack, as before: a relay of anyone else's words, a paraphrase, a pick you record yourself with
+`--terminal-ask`, an answer given on the swarm page, and any Codex or opencode session (obl reads no transcript
+there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). What the check can't stop, plainly: anything typed into
+your pane (tmux send-keys) is recorded as his typing, you could append a turn to your own transcript file, and a
+payload piped into `obl hook post-ask` passes for the hook's. Doing any of these forges his answer. On ordinary
+questions his relayed word still counts. His posts through an app count only if his people entry lists that app.
 
 If your agent posts in the channel for you, connect it as its own registered bot rather than posting through your
 account or a shared app. Post once with it, then ask the coordinator to register it: the Operator adds a people entry
