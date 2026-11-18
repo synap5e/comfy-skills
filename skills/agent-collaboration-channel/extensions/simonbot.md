@@ -140,10 +140,10 @@ OBL-1452). Record it with `obl-post answer --from terminal --note '<where>' --qu
 for his words, typed after the question was posted, in your own session's transcript (a Claude Code session you
 registered with `obl watch-session`). Only his newest message counts (one typed while you were busy included),
 typed after your last paragraph showed the question's whole key (`OBL-N-Q-M`) and no other question's. It must be
-just one option's whole label (a pasted block aside, no `?`). A typed number or a bare yes waits for his confirm in
-Slack: your order may not be the card's. "don't approve, hold it" isn't Approve, and "Approve" then "actually no" is no
-answer. A `--text` answer counts only on a question with no options, as his whole message and the quote, and more
-than a yes or a number. obl can't see an "actually no" he typed while you were busy that hasn't reached you yet. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
+exactly one option's label (a pasted block, case, spacing and a trailing full stop aside); nothing is read into it.
+A typed number, a bare yes, other words ("go with Approve") or his free text (`--text`) wait for his confirm in
+Slack. "Approve" then "actually no" is no answer. obl can't see an "actually no" he typed while you were busy that
+hasn't reached you yet. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
 or reply in Slack, as before: a relay of anyone else's words, a paraphrase, a pick you record yourself with
 `--terminal-ask`, an answer given on the swarm page, and any Codex or opencode session (obl reads no transcript
 there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). The check catches a mistake, not a forger. What it can't
