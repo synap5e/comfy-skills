@@ -138,14 +138,17 @@ confirm", with one prompt for them to click. This holds for the Operator too, wi
 or picked in an agent's own terminal counts as his once obl checks it there (Simon, 11-18: "terminal > slack"; owners
 OBL-1452). Record it with `obl-post answer --from terminal --note '<where>' --quote '<his exact words>'`. obl looks
 for his words, typed after the question was posted, in your own session's transcript (a Claude Code session you
-registered with `obl watch-session`). They must name the choice: its option number or label and nothing else, or a
-bare yes on a two-option question in his turn right after yours showed the question's key. One turn answers one
+registered with `obl watch-session`). His whole message must be the answer: its option number or label and nothing
+else (a pasted block aside), or a bare yes on a two-option question in his turn right after yours showed the
+question's key; "don't pick 1, hold it" isn't 1. A `--text` must be his words, the quote. One turn answers one
 question. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
 or reply in Slack, as before: a relay of anyone else's words, a paraphrase, a pick you record yourself with
 `--terminal-ask`, an answer given on the swarm page, and any Codex or opencode session (obl reads no transcript
-there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). What the check can't stop, plainly: anything typed into
-your pane (tmux send-keys) is recorded as his typing, you could append a turn to your own transcript file, and a
-payload piped into `obl hook post-ask` passes for the hook's. Doing any of these forges his answer. On ordinary
+there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). The check catches a mistake, not a forger. What it can't
+stop, plainly: anything typed into your pane (tmux send-keys) is recorded as his typing; you could append a turn to
+your own transcript file, or point obl at another agent's session (`CLAUDE_CODE_SESSION_ID` and `obl watch-session`)
+so his words there read as typed in yours; a payload piped into `obl hook post-ask`, or code that imports obl_toolkit
+and sets its `HOOK_PICK`, passes for obl's own hook. Doing any of these forges his answer. On ordinary
 questions his relayed word still counts. His posts through an app count only if his people entry lists that app.
 
 If your agent posts in the channel for you, connect it as its own registered bot rather than posting through your
