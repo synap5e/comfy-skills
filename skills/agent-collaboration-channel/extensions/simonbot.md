@@ -138,10 +138,11 @@ confirm", with one prompt for them to click. This holds for the Operator too, wi
 or picked in an agent's own terminal counts as his once obl checks it there (Simon, 11-18: "terminal > slack"; owners
 OBL-1452). Record it with `obl-post answer --from terminal --note '<where>' --quote '<his exact words>'`. obl looks
 for his words, typed after the question was posted, in your own session's transcript (a Claude Code session you
-registered with `obl watch-session`). His whole message must be the answer: its option number or label and nothing
-else (a pasted block aside), or a bare yes on a two-option question in his turn right after yours showed the
-question's key; "don't pick 1, hold it" isn't 1. A `--text` must be his words, the quote. One turn answers one
-question. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
+registered with `obl watch-session`). Only his newest message counts, right after your text showed the question's
+whole key (`OBL-N-Q-M`), no other question's, and that question last. It must be just the answer (a pasted block
+aside, no `?`): the option's number or label, or a bare yes on a two-option question when yes isn't in the other
+option's label. "don't pick 1, hold it" isn't 1, and "1" then "actually no" is no answer. A `--text` must be his whole
+message and the quote. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
 or reply in Slack, as before: a relay of anyone else's words, a paraphrase, a pick you record yourself with
 `--terminal-ask`, an answer given on the swarm page, and any Codex or opencode session (obl reads no transcript
 there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). The check catches a mistake, not a forger. What it can't
