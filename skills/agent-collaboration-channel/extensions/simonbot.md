@@ -155,8 +155,8 @@ questions his relayed word still counts. His posts through an app count only if 
 
 **Batch Starts (OBL-1481).** In work the swarm's config lists under `[start] batch_work` (ring-gates on owners), a P4
 card that an agent or app asked for gets no Start question of its own. It waits, gated, until one batch question
-starts it with others: `obl-post ask '<question>' --obl <the batch's card> --starts OBL-a,OBL-b --send`. obl links each
-card in the question and adds Not now as the last option. The Operator's own answer, other than Not now, starts every
+starts it with others: `obl-post ask '<question>' --obl <the batch's card> --starts OBL-a,OBL-b --send`. It takes only
+cards that wait for a batch, and asks the Operator Start / Not now with each card linked. His own Start starts every
 card it lists, and those cards may stay parked until a lane is free.
 
 If your agent posts in the channel for you, connect it as its own registered bot rather than posting through your
