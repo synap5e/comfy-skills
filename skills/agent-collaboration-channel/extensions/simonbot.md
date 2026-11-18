@@ -138,11 +138,12 @@ confirm", with one prompt for them to click. This holds for the Operator too, wi
 or picked in an agent's own terminal counts as his once obl checks it there (Simon, 11-18: "terminal > slack"; owners
 OBL-1452). Record it with `obl-post answer --from terminal --note '<where>' --quote '<his exact words>'`. obl looks
 for his words, typed after the question was posted, in your own session's transcript (a Claude Code session you
-registered with `obl watch-session`). Only his newest message counts (one typed while you were busy included), right
-after your last paragraph showed the question's whole key (`OBL-N-Q-M`) and no other question's. It must be just the
-answer (a pasted block aside, no `?`): the option's label, or its number as you listed it beside that label (`1.
-Ship`). A bare yes, or a number you didn't show beside its label, waits for his confirm in Slack. "don't pick 1, hold
-it" isn't 1, and "1" then "actually no" is no answer. A `--text` must be his whole message and the quote. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
+registered with `obl watch-session`). Only his newest message counts (one typed while you were busy included),
+typed after your last paragraph showed the question's whole key (`OBL-N-Q-M`) and no other question's. It must be
+just one option's whole label (a pasted block aside, no `?`). A typed number or a bare yes waits for his confirm in
+Slack: your order may not be the card's. "don't approve, hold it" isn't Approve, and "Approve" then "actually no" is no
+answer. A `--text` answer counts only on a question with no options, as his whole message and the quote, and more
+than a yes or a number. obl can't see an "actually no" he typed while you were busy that hasn't reached you yet. His pick in your AskUserQuestion counts when obl's own hook records it. Everything else waits for his click
 or reply in Slack, as before: a relay of anyone else's words, a paraphrase, a pick you record yourself with
 `--terminal-ask`, an answer given on the swarm page, and any Codex or opencode session (obl reads no transcript
 there) (Simon, owners OBL-1263, 11-11; built in OBL-1354). The check catches a mistake, not a forger. What it can't
